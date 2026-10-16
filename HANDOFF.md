@@ -8,7 +8,7 @@
 
 ## 接力前准备
 
-1. 获得此私有 GitHub 仓库的访问权限，clone 后运行 `npm ci && npm run check`。
+1. 此 GitHub 仓库已按用户要求公开；clone 后运行 `npm ci && npm run check`。推送修改仍需仓库写入权限，也可通过 fork 提交 Pull Request。
 2. 使用自己的已授权 ChatGPT 网页会话，在 Codex 原生 Chrome 扩展中实际确认 Pro 模型可选。Codex 客户端已登录 Pro 不代表网页也已登录；不传递原开发者的 cookies、账户或任务数据库。
 3. 运行 `npm run package`，安装 `release/codex-web-capabilities-marketplace`，参照 [README](README.md)。CLI 管状态，Codex 技能操作网页；仅启动 MCP 不会自动驾驶浏览器。
 4. 优先完成 Pro CR → 修复 → 测试 → 同会话复审，然后按下表继续。
