@@ -1,0 +1,113 @@
+[
+  {
+    "repo": "miuuyy/codex-chatgpt-web",
+    "sha": "f137c2f84da5df214c1e228d74f5ff43e7641c48",
+    "license": {
+      "spdx_id": "MIT"
+    }
+  },
+  {
+    "repo": "pauljunsukhan/codex-chatgpt-pro-plugin",
+    "sha": "0cc5c5509ebaccfc7dad45b9e02a0f86407c817c",
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZTEz"
+    },
+    "stars": 83,
+    "forks": 9
+  },
+  {
+    "repo": "rebel0789/codexpro",
+    "sha": "113472c6ff0a1516b6f223a43cd355abdf2e61ae",
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZTEz"
+    },
+    "stars": 2090,
+    "forks": 221
+  },
+  {
+    "repo": "NAMUORI00/cross-review-bridge",
+    "sha": "61ba6108ae59be3860b97adf5baff4bd7bb33489",
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZTEz"
+    },
+    "stars": 0,
+    "forks": 0
+  },
+  {
+    "repo": "openai/tunnel-client",
+    "sha": "aa603c51565b6b1f55b5bcf10880d79033fb3987",
+    "license": {
+      "key": "apache-2.0",
+      "name": "Apache License 2.0",
+      "spdx_id": "Apache-2.0",
+      "url": "https://api.github.com/licenses/apache-2.0",
+      "node_id": "MDc6TGljZW5zZTI="
+    },
+    "stars": 568,
+    "forks": 120
+  },
+  {
+    "repo": "Evanlau1798/codex-chatgpt-web",
+    "sha": "de76195c82a33fa70ec1cb60a277fe55b0332664",
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZTEz"
+    },
+    "stars": 38,
+    "forks": 7
+  },
+  {
+    "repo": "steipete/oracle",
+    "sha": "14ae9f9a00e222d4b08f34ceccafc86b5a3e815f",
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZTEz"
+    },
+    "stars": 4055,
+    "forks": 423
+  },
+  {
+    "repo": "Yubo-Cao/codex-chatgpt-pro-bridge",
+    "sha": "5f2fbd530db0b7c8d05159571860b9ec2b19c0f9",
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZTEz"
+    },
+    "stars": 0,
+    "forks": 0
+  },
+  {
+    "repo": "yuyou-dev/ChatGPT-Bridge",
+    "sha": "6b5eef1343158d37ce2bc4245892f7b3238fc5f0",
+    "license": {
+      "key": "mit",
+      "name": "MIT License",
+      "spdx_id": "MIT",
+      "url": "https://api.github.com/licenses/mit",
+      "node_id": "MDc6TGljZW5zZTEz"
+    },
+    "stars": 16,
+    "forks": 2
+  }
+]

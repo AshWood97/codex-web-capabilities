@@ -1,0 +1,13 @@
+node_modules/
+build/
+dist/
+release/
+.cwc/
+*.tgz
+.DS_Store
+.env
+.env.*
+!.env.example
+auth.json
+runtime-key*.txt
+configure.local.json

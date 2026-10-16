@@ -1,0 +1,31 @@
+{
+  "tools": [
+    "inspect_page",
+    "capabilities",
+    "prepare",
+    "bind",
+    "reserve_submission",
+    "confirm_submission",
+    "resume",
+    "recover",
+    "answer_question",
+    "observe",
+    "import_image",
+    "status",
+    "list",
+    "result",
+    "cancel",
+    "record_findings",
+    "grant_snapshot",
+    "read_snapshot",
+    "voice"
+  ],
+  "result": {
+    "content": [
+      {
+        "type": "text",
+        "text": "{\"version\":\"0.1.0\",\"capabilities\":{\"review\":\"native-browser-workflow\",\"collaborate\":\"native-browser-workflow\",\"research\":\"native-browser-workflow\",\"image\":\"native-browser-workflow\",\"agent\":\"optional-pinned-runtime\",\"voice\":\"not_implemented\"},\"browserControl\":\"Codex native Browser Use; this server does not drive a browser\",\"account\":{\"models\":\"discover in bound page\",\"developerMode\":\"requires account UI verification\",\"tunnel\":\"requires optional runtime doctor\"},\"concurrency\":2,\"runtime\":{\"pin\":\"f137c2f84da5df214c1e228d74f5ff43e7641c48\",\"installed\":false,\"profile\":\"<WORKSPACE>/work/installation-check/state/runtime/profile\",\"codexHome\":\"<WORKSPACE>/work/installation-check/state/runtime/codex-home\",\"liveVerified\":false,\"health\":\"run runtime doctor after launcher login and tunnel setup\"}}"
+      }
+    ]
+  }
+}

@@ -1,0 +1,49 @@
+
+added 101 packages in 882ms
+
+> codex-web-capabilities@0.1.0 check
+> npm run typecheck && npm test && node scripts/notices.mjs && node scripts/validate-package.mjs
+
+
+> codex-web-capabilities@0.1.0 typecheck
+> tsc --noEmit
+
+
+> codex-web-capabilities@0.1.0 test
+> npm run build && tsc && node --test build/tests/*.test.js
+
+
+> codex-web-capabilities@0.1.0 build
+> node scripts/build.mjs
+
+✔ snapshot: secrets, symlinks, deleted secrets and explicit coverage (555.326375ms)
+✔ single submit survives >1 hour, process restart, and duplicate confirmation (5.185916ms)
+✔ ownership, queue limits, cancellation confirmation and recovery (7.07325ms)
+✔ stability requires repeated unchanged final UI, not elapsed thinking (4.615541ms)
+✔ research rejects ordinary replies, old reports, placeholders; clarification keeps conversation (5.862459ms)
+✔ snapshot capabilities cannot cross jobs or traverse files, expire and revoke (344.505333ms)
+✔ image batch cannot complete with missing/duplicate originals or foreign downloads (10.922625ms)
+✔ review findings reject stale snapshot and wrong source positions; continuation requires same repo (942.539791ms)
+✔ independent store instances serialize state updates without dropping jobs (9.092084ms)
+✔ tab loss before URL persistence recovers only with nonce and exact observed prompt (3.17ms)
+✔ untrusted repository instructions remain snapshot text, no command is executed (179.755584ms)
+✔ explicit larger context limit is retained during stale checks (374.161833ms)
+✔ bundled MCP process: local tool inventory (100.103875ms)
+✔ bundled MCP process: read-only tool inventory (88.679458ms)
+✔ page fixture: research-app-error (0.677666ms)
+✔ page fixture: research-progress (0.227125ms)
+✔ page fixture: image-incomplete (0.233666ms)
+✔ eight OS processes retain all concurrent prepared jobs (219.340083ms)
+✔ submission reservation survives actual CLI process exit and restarts (242.036875ms)
+✔ runtime child environment isolates route/profile while inheriting host settings (2.293083ms)
+✔ runtime refuses concurrent mutation and preserves journal/lock (1.528625ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2511.77
+Third-party license inventory generated.
+Plugin manifest, MCP entrypoint, six skills, references and runtime pin validated.

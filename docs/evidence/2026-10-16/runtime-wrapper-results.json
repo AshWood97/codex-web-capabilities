@@ -1,0 +1,20 @@
+[
+  {
+    "operation": "prepare",
+    "code": 0,
+    "stdout": "{\n  \"pin\": \"f137c2f84da5df214c1e228d74f5ff43e7641c48\",\n  \"installed\": true,\n  \"actual\": \"f137c2f84da5df214c1e228d74f5ff43e7641c48\",\n  \"profile\": \"<WORKSPACE>/work/runtime-check/runtime/profile\",\n  \"codexHome\": \"<WORKSPACE>/work/runtime-check/runtime/codex-home\",\n  \"transaction\": {\n    \"stage\": \"source_verified\",\n    \"pin\": \"f137c2f84da5df214c1e228d74f5ff43e7641c48\",\n    \"bun\": \"<WORKSPACE>/work/tools/node_modules/.bin/bun\",\n    \"primaryConfigModified\": false,\n    \"started\": \"2026-10-16T05:38:26.949Z\",\n    \"updated\": \"2026-10-16T05:38:26.950Z\"\n  },\n  \"liveVerified\": false,\n  \"health\": \"run runtime doctor after launcher login and tunnel setup\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "operation": "configure",
+    "code": 1,
+    "stdout": "",
+    "stderr": "{\n  \"error\": {\n    \"code\": \"CONTEXT_CONFLICT\",\n    \"message\": \"Retained sessions and Bigger Context are mutually exclusive.\"\n  }\n}\n"
+  },
+  {
+    "operation": "status",
+    "code": 0,
+    "stdout": "{\n  \"pin\": \"f137c2f84da5df214c1e228d74f5ff43e7641c48\",\n  \"installed\": true,\n  \"actual\": \"f137c2f84da5df214c1e228d74f5ff43e7641c48\",\n  \"profile\": \"<WORKSPACE>/work/runtime-check/runtime/profile\",\n  \"codexHome\": \"<WORKSPACE>/work/runtime-check/runtime/codex-home\",\n  \"transaction\": {\n    \"stage\": \"source_verified\",\n    \"pin\": \"f137c2f84da5df214c1e228d74f5ff43e7641c48\",\n    \"bun\": \"<WORKSPACE>/work/tools/node_modules/.bin/bun\",\n    \"primaryConfigModified\": false,\n    \"started\": \"2026-10-16T05:38:26.949Z\",\n    \"updated\": \"2026-10-16T05:38:26.950Z\"\n  },\n  \"liveVerified\": false,\n  \"health\": \"run runtime doctor after launcher login and tunnel setup\"\n}\n",
+    "stderr": ""
+  }
+]

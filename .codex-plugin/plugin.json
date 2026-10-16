@@ -1,0 +1,14 @@
+{
+  "name": "codex-web-capabilities",
+  "version": "0.1.0",
+  "description": "由 Codex 调用 ChatGPT 网页 Pro、深度研究与图像，支持可选完整编码运行时。",
+  "license": "MIT",
+  "skills": "./skills/",
+  "mcpServers": "./.mcp.json",
+  "requires_local_executor": true,
+  "interface": {
+    "displayName": "Codex Web Capabilities",
+    "shortDescription": "网页 Pro 审查、持续协作、研究、图像与完整编码",
+    "longDescription": "原生 Chrome / Codex Browser 工作流，持久任务、可恢复提交、源码快照及原图交付。完整编码使用可选的锁定上游运行时。"
+  }
+}

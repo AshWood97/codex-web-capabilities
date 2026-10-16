@@ -1,0 +1,2 @@
+$ bun run scripts/build-runtime-bundle.ts
+<WORKSPACE>/work/upstream/codex-chatgpt-web/dist/runtime

@@ -1,0 +1,34 @@
+[
+  {
+    "args": [
+      "plugin",
+      "marketplace",
+      "add",
+      "<WORKSPACE>/work/package-check/codex-web-capabilities-marketplace"
+    ],
+    "code": 0,
+    "stdout": "Added marketplace `codex-web-capabilities-local` from <WORKSPACE>/work/package-check/codex-web-capabilities-marketplace.\nInstalled marketplace root: <WORKSPACE>/work/package-check/codex-web-capabilities-marketplace\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "plugin",
+      "add",
+      "codex-web-capabilities@codex-web-capabilities-local",
+      "--json"
+    ],
+    "code": 0,
+    "stdout": "{\n  \"pluginId\": \"codex-web-capabilities@codex-web-capabilities-local\",\n  \"name\": \"codex-web-capabilities\",\n  \"marketplaceName\": \"codex-web-capabilities-local\",\n  \"version\": \"0.1.0\",\n  \"installedPath\": \"<WORKSPACE>/work/installation-check/plugins/cache/codex-web-capabilities-local/codex-web-capabilities/0.1.0\",\n  \"authPolicy\": \"ON_INSTALL\"\n}\n",
+    "stderr": ""
+  },
+  {
+    "args": [
+      "plugin",
+      "list",
+      "--json"
+    ],
+    "code": 0,
+    "stdout": "{\n  \"installed\": [\n    {\n      \"pluginId\": \"codex-web-capabilities@codex-web-capabilities-local\",\n      \"name\": \"codex-web-capabilities\",\n      \"marketplaceName\": \"codex-web-capabilities-local\",\n      \"version\": \"0.1.0\",\n      \"installed\": true,\n      \"enabled\": true,\n      \"source\": {\n        \"source\": \"local\",\n        \"path\": \"<WORKSPACE>/work/package-check/codex-web-capabilities-marketplace/plugins/codex-web-capabilities\"\n      },\n      \"marketplaceSource\": {\n        \"sourceType\": \"local\",\n        \"source\": \"<WORKSPACE>/work/package-check/codex-web-capabilities-marketplace\"\n      },\n      \"installPolicy\": \"AVAILABLE\",\n      \"authPolicy\": \"ON_INSTALL\"\n    }\n  ],\n  \"available\": []\n}\n",
+    "stderr": ""
+  }
+]

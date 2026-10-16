@@ -1,0 +1,44 @@
+{
+  "name": "codex-web-capabilities",
+  "version": "0.1.0",
+  "description": "Codex-native ChatGPT Web workflows with durable jobs and an optional full harness runtime",
+  "type": "module",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22"
+  },
+  "bin": {
+    "cwc": "dist/cli.mjs",
+    "cwc-mcp": "dist/mcp.mjs"
+  },
+  "files": [
+    "dist",
+    "skills",
+    "docs",
+    "scripts",
+    "runtime",
+    ".codex-plugin",
+    ".mcp.json",
+    "README.md",
+    "HANDOFF.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md"
+  ],
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "npm run build && tsc && node --test build/tests/*.test.js",
+    "check": "npm run typecheck && npm test && node scripts/notices.mjs && node scripts/validate-package.mjs",
+    "package": "npm run check && node scripts/package.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.32.1",
+    "image-size": "2.0.4",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "esbuild": "0.28.2",
+    "typescript": "5.9.3"
+  }
+}

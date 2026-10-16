@@ -1,0 +1,15 @@
+import {mkdirSync,cpSync,readFileSync,writeFileSync,readdirSync,statSync,existsSync} from 'node:fs';
+import {resolve,join,relative} from 'node:path';
+import {execFileSync} from 'node:child_process';
+import {createHash} from 'node:crypto';
+const out=resolve(process.argv[2]??'release');mkdirSync(out,{recursive:true});const name='codex-web-capabilities';
+const marketplace=join(out,'codex-web-capabilities-marketplace');const plugin=join(marketplace,'plugins',name);mkdirSync(plugin,{recursive:true});
+const distributable=['.codex-plugin','.mcp.json','dist','skills','docs','runtime','README.md','HANDOFF.md','LICENSE','THIRD_PARTY_NOTICES.md','package.json','package-lock.json'];
+for(const p of distributable)cpSync(p,join(plugin,p),{recursive:true});
+mkdirSync(join(marketplace,'.agents/plugins'),{recursive:true});writeFileSync(join(marketplace,'.agents/plugins/marketplace.json'),JSON.stringify({name:'codex-web-capabilities-local',interface:{displayName:'Codex Web Capabilities 本地'},plugins:[{name,source:{source:'local',path:'./plugins/'+name},policy:{installation:'AVAILABLE',authentication:'ON_INSTALL'},category:'Productivity'}]},null,2));
+execFileSync(process.execPath,['scripts/validate-package.mjs',plugin],{stdio:'inherit'});
+const source=join(out,name+'-source');mkdirSync(source,{recursive:true});for(const p of [...distributable,'src','tests','scripts','tsconfig.json','.gitignore'])cpSync(p,join(source,p),{recursive:true});
+execFileSync('tar',['-czf',join(out,name+'-plugin-0.1.0.tar.gz'),'-C',out,'codex-web-capabilities-marketplace']);
+execFileSync('tar',['-czf',join(out,name+'-source-0.1.0.tar.gz'),'-C',out,name+'-source']);
+const files=readdirSync(out).filter(x=>x.endsWith('.tar.gz'));writeFileSync(join(out,'SHA256SUMS'),files.map(f=>`${createHash('sha256').update(readFileSync(join(out,f))).digest('hex')}  ${f}`).join('\n')+'\n');
+console.log(JSON.stringify({marketplace,plugin,source,archives:files},null,2));

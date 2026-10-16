@@ -1,0 +1,4 @@
+- paragraph: "Request identifier: CWC-fixture"
+- generic: 创建图像
+- status: ChatGPT 正在回应
+- button "停止"

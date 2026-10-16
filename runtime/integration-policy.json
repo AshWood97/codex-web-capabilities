@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "upstream": "https://github.com/miuuyy/codex-chatgpt-web",
+  "commit": "f137c2f84da5df214c1e228d74f5ff43e7641c48",
+  "bun": "1.4.0",
+  "enhancedReference": "de76195c82a33fa70ec1cb60a277fe55b0332664",
+  "subagentProtocol": "native",
+  "autoApproveToolCalls": false,
+  "replacePrimaryCodexRoute": false,
+  "retainedSession": true,
+  "biggerContext": false,
+  "mutuallyExclusive": ["retainedSession", "biggerContext"],
+  "tunnelClientRelease": "0.0.16",
+  "sourcePatches": []
+}

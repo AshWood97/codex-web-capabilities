@@ -1,0 +1,2 @@
+import test from 'node:test';import assert from 'node:assert/strict';import {readFileSync} from 'node:fs';import {pageEvidence} from '../src/page-evidence.js';
+for(const name of ['research-app-error','research-progress','image-incomplete'])test(`page fixture: ${name}`,()=>{const result=pageEvidence(readFileSync(`tests/fixtures/${name}.txt`,'utf8'));assert.equal(result.complete,false);assert.equal(result.phaseHint,name==='research-app-error'?'error':'running');});

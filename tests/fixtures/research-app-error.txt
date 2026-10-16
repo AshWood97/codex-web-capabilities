@@ -1,0 +1,10 @@
+# Sanitized current-turn excerpt captured from native Chrome on 2026-10-16.
+- paragraph:
+  - link "深度研究"
+  - text: "Request identifier: CWC-fixture"
+- status: 无法打开 深度研究
+- button "在标签页中打开应用"
+- alert:
+  - heading "未能显示 深度研究" [level=2]
+- status: 无法加载此回复
+- status: 回答已完成

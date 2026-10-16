@@ -1,0 +1,27 @@
+{
+  "actions": [
+    {
+      "args": [
+        "plugin",
+        "remove",
+        "codex-web-capabilities@codex-web-capabilities-local",
+        "--json"
+      ],
+      "code": 0,
+      "stdout": "{\n  \"pluginId\": \"codex-web-capabilities@codex-web-capabilities-local\",\n  \"name\": \"codex-web-capabilities\",\n  \"marketplaceName\": \"codex-web-capabilities-local\"\n}\n",
+      "stderr": ""
+    },
+    {
+      "args": [
+        "plugin",
+        "marketplace",
+        "remove",
+        "codex-web-capabilities-local"
+      ],
+      "code": 0,
+      "stdout": "Removed marketplace `codex-web-capabilities-local`.\n",
+      "stderr": ""
+    }
+  ],
+  "preservedConfig": "model = \"existing-model\"\napproval_policy = \"on-request\"\nsandbox_mode = \"workspace-write\"\n\n[features]\nmulti_agent = true\n\n[user_change_after_install]\nkeep_me = \"yes\"\n"
+}

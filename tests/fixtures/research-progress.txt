@@ -1,0 +1,5 @@
+- paragraph: "Request identifier: CWC-fixture"
+- generic: Deep Research
+- heading "Research plan"
+- status: Research in progress
+- button "Stop"

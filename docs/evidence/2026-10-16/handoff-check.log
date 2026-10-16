@@ -1,0 +1,47 @@
+
+> codex-web-capabilities@0.1.0 check
+> npm run typecheck && npm test && node scripts/notices.mjs && node scripts/validate-package.mjs
+
+
+> codex-web-capabilities@0.1.0 typecheck
+> tsc --noEmit
+
+
+> codex-web-capabilities@0.1.0 test
+> npm run build && tsc && node --test build/tests/*.test.js
+
+
+> codex-web-capabilities@0.1.0 build
+> node scripts/build.mjs
+
+✔ snapshot: secrets, symlinks, deleted secrets and explicit coverage (727.347041ms)
+✔ single submit survives >1 hour, process restart, and duplicate confirmation (7.091333ms)
+✔ ownership, queue limits, cancellation confirmation and recovery (7.107042ms)
+✔ stability requires repeated unchanged final UI, not elapsed thinking (8.810042ms)
+✔ research rejects ordinary replies, old reports, placeholders; clarification keeps conversation (5.85625ms)
+✔ snapshot capabilities cannot cross jobs or traverse files, expire and revoke (501.548167ms)
+✔ image batch cannot complete with missing/duplicate originals or foreign downloads (4.597208ms)
+✔ review findings reject stale snapshot and wrong source positions; continuation requires same repo (1269.392125ms)
+✔ independent store instances serialize state updates without dropping jobs (8.864375ms)
+✔ tab loss before URL persistence recovers only with nonce and exact observed prompt (3.325916ms)
+✔ untrusted repository instructions remain snapshot text, no command is executed (239.379458ms)
+✔ explicit larger context limit is retained during stale checks (517.821208ms)
+✔ bundled MCP process: local tool inventory (97.971875ms)
+✔ bundled MCP process: read-only tool inventory (83.26525ms)
+✔ page fixture: research-app-error (0.728542ms)
+✔ page fixture: research-progress (0.255834ms)
+✔ page fixture: image-incomplete (0.26325ms)
+✔ eight OS processes retain all concurrent prepared jobs (208.933042ms)
+✔ submission reservation survives actual CLI process exit and restarts (237.664292ms)
+✔ runtime child environment isolates route/profile while inheriting host settings (2.410208ms)
+✔ runtime refuses concurrent mutation and preserves journal/lock (2.549708ms)
+ℹ tests 21
+ℹ suites 0
+ℹ pass 21
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3375.513125
+Third-party license inventory generated.
+Plugin manifest, MCP entrypoint, six skills, references and runtime pin validated.
