@@ -1,7 +1,7 @@
 {
   "schemaVersion": 1,
   "upstream": "https://github.com/miuuyy/codex-chatgpt-web",
-  "commit": "f137c2f84da5df214c1e228d74f5ff43e7641c48",
+  "commit": "6f43747eb5585ca623c0617e729826dfd680c5b7",
   "bun": "1.4.0",
   "enhancedReference": "de76195c82a33fa70ec1cb60a277fe55b0332664",
   "subagentProtocol": "native",

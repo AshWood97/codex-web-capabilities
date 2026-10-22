@@ -1,60 +1,54 @@
 # 接力入口：Codex Web Capabilities
 
-交接日期：2026-10-16。当前版本 **0.1.0 验证版，真实账户验收未完成**。
+更新日期：**2026-10-22**。当前版本 **0.1.0 验证版**。默认四类网页流程使用原生 Chrome 和实际可见的 GPT-6；本轮 CR/协作使用“高”档位，Pro 暂缓。
 
-目标是让用户始终在 Codex 发起任务、看进度、收结果，调用 ChatGPT 网页 Pro 做 CR、持续协作，并支持真正的网页 Deep Research、图像及可选完整编码运行时。语音首版只保留接口。
+先读 [验收记录](docs/acceptance.md) 和 [接力计划](docs/plans/2026-10-16-agent-handoff.md)，保留已有实现与已完成结果。真实观察摘要在 [实机简报](docs/evidence/2026-10-22-live.md)，历史日志见 [证据索引](docs/evidence/README.md)。
 
-**下一位执行者先读 [详细执行计划](docs/plans/2026-10-16-agent-handoff.md)，再读 [验收记录](docs/acceptance.md)。不要重新从零实现，也不要把已有离线测试当作网页实测。**
+## 已完成
 
-## 接力前准备
+- 本地 TypeScript MCP、19 个工具、六个技能、持久任务、单次发送、仓库快照和冻结快照只读接口。
+- 本轮 `npm run check` 的 **31 项自动测试通过**，六技能 `quick_validate` 全部通过。自动测试涵盖新增普通 chat 模式与原生下载 helper；历史 21 项和旧上游 143 测试 / 1276 断言不作新 pin 结果。
+- Chrome 普通 GPT-6 chat + 高完成 CR → Codex 修复 → 2 项本地测试通过 → 同会话复审 0 findings，定位问题为 `shipping.mjs:3` 的免邮边界。
+- 同会话第三轮持续协作静态核对 8 种输入；网页明确未运行测试，Codex 补 0、正负 Infinity 的 3 个断言，合成仓库 3 项测试通过。新 CLI 进程 resume 无重发，任务两次稳定观察后完成；新增测试使先前快照 stale，符合设计。
+- 真正 Deep Research 在组件加载错误后重试组件一次恢复，未新增用户消息；提取当前轮次 3832 字符报告。UI 9 来源 / 9 引用 / 122 搜索，DOM 8 条 HTTPS 来源；未逐条独立审核报告技术断言。
+- 初始原图 1,721,014 bytes，编辑原图 1,660,188 bytes，均为 1254×1254 且已打开查看。Chrome 预览 Download 落盘；初始图事件超时后按唯一图名/点击时间定位，没有预点击文件系统基线，编辑图才使用完整基线 helper。pageAssets 未暴露结果 blob。
+- 可选上游 v6.1.13 固定 SHA `6f43747eb5585ca623c0617e729826dfd680c5b7` 的 `runtime prepare` 源码与依赖已就绪。
+- production launcher 已真实构建启动，界面显示 v6.1.13、无 DEV，保留 wrapper 隔离目录；停在首次引导。
+- 候选 archive 已构建；独立新 CODEX_HOME 安装 marketplace/plugin 后 list enabled，缓存无 node_modules，MCP 冷启动 19 工具、collaborate 默认 chat，两个 helper bundle 可导入，卸载/移除来源通过。日常 Codex 配置未改；桌面当前会话加载未验收。
 
-1. 此 GitHub 仓库已按用户要求公开；clone 后运行 `npm ci && npm run check`。推送修改仍需仓库写入权限，也可通过 fork 提交 Pull Request。
-2. 使用自己的已授权 ChatGPT 网页会话，在 Codex 原生 Chrome 扩展中实际确认 Pro 模型可选。Codex 客户端已登录 Pro 不代表网页也已登录；不传递原开发者的 cookies、账户或任务数据库。
-3. 运行 `npm run package`，安装 `release/codex-web-capabilities-marketplace`，参照 [README](README.md)。CLI 管状态，Codex 技能操作网页；仅启动 MCP 不会自动驾驶浏览器。
-4. 优先完成 Pro CR → 修复 → 测试 → 同会话复审，然后按下表继续。
+最终发行物已按冻结文档重新生成：本地 marketplace 插件包与源码包。后续源码变更仍需重新构建，不将旧上游测试当作新 pin 的结果。
 
-## 已完成的基础
+## 下一步
 
-- TypeScript 本地 MCP、19 个工具、六个 Codex 技能、可安装本地 marketplace 和源码打包。
-- 仓库快照、源码行号/哈希、覆盖范围与排除记录、过期审查判断。
-- 持久任务、两任务并发、标签页/会话隔离、发送前预约、断开后观察恢复、澄清轮次记录。
-- 研究当前轮次归属及引用检查；原图路径/格式/尺寸/哈希/数量检查；只读快照令牌。
-- 独立完整运行时的固定 SHA 安装、配置事务、健康检查、原生 Codex CLI 调用入口和回滚包装。
-- 参考项目、固定版本、采用方式和第三方许可证清单。
-- 本项目 21 项自动化测试；锁定上游 7 个测试文件的 143 项测试 / 1276 断言通过。
-- 真实 Chrome 图像生成成功，发送后标签页丢失的会话恢复曾成功，未重复发送。
+| 优先级 | 待办 | 当前限制与完成标准 |
+|---|---|---|
+| P0 | 完整 agent 的独立登录、配置与工具循环 | 已修复 `app` → `dev` / `--dev-profile` 的模拟工具入口，production launcher 真实启动成功。使用者尚未完成独立登录和平台授权；doctor 返回 `ok=false`，提示缺少 `config.json`、Run setup。之后还需 MCP/tunnel 权限、真实读取/修改/终端测试事件与本地结果，才能验收。 |
+| P1 | 已保存 CR 会话的网页重载 | 新 Chrome 标签页重开已存会话后，两条旧助手回复无法加载；当次实时回复和本地结果成功。保留原结果并定位重载限制，不能把本轮 CR 成功写成 reload 恢复通过。 |
+| P1 | 研究澄清与计划分支 | 本轮研究直接完成，未触发实际澄清或计划确认；需要网页真实触发时验证同任务新轮次和报告归属。 |
+| P1 | 真实多图 batch | 目前只验证初始图和单图参考编辑；需实际多图、数量不足和重复图拒收，不用截图补齐数量。 |
+| P1 | 真实长任务及写工具断连 | 本轮第三轮任务的新 CLI 进程 resume 已通过，未重发；真实超过 1 小时网页任务与完整写工具断连尚未验收。恢复时查明原操作状态，不重发或重放不确定写入。 |
+| P1 | 线上 setup/rollback 与桌面加载 | 当前候选包独立 CLI 安装、冷启动和卸载通过；完整在线配置、回滚保留后续用户字段，以及桌面六技能/MCP 实际加载仍待验收。 |
 
-上述“基础已完成”不代表所有用户流程已可用。真实 Pro、研究报告、完整编码仍必须按下面的完成标准验收，发现实现缺口后修复。
+语音首版只保留 `not_implemented` 接口，不在这次接力实现范围。完整 agent 的阻塞不应阻止其余 Chrome 流程。
 
-## 未完成清单
+## 浏览器与权限
 
-| 优先级 | 待办 | 当前事实 / 阻塞 | 完成标准 |
-|---|---|---|---|
-| P0 | Pro CR 与同会话复审 | 原机器默认 Chrome 为 Plus，无 Pro；另一网页会话未登录，尚未发送 Pro CR | 在真实可见 Pro 模型发现预置 `shipping.mjs:3` 边界缺陷；本地核对/记录；修复并测试；同会话复审；旧快照变 stale |
-| P0 | 持续协作 | 状态机与 parent 续接离线通过，真实多轮未验证 | 补充上下文、反馈测试失败、修复和复审留在同仓库/会话；记录每轮真实消息与模型 |
-| P0 | 网页 Pro 完整 agent 编码 | 上游构建和选定测试通过；独立浏览器登录、tunnel/连接器授权和真实工具循环未完成 | 真实网页模型驱动文件读取、修改、终端测试和多轮调用；JSONL 及本地 diff/test 证明；验证中断不重放写操作 |
-| P0 | 真正 Deep Research 完整报告 | 真实选择研究模式后网页报“无法打开／未能显示 深度研究”；没有报告 | 可用账户完成真实研究；只提取本任务 report/iframe 全文与引用；拒绝旧报告、占位和普通长回答 |
-| P1 | 原图下载、参考图编辑、批次 | 网页生成成功；当前 Browser Use 不支持该 blob 下载，下载事件曾超时；未拿到原文件 | 原生导出可打开的原图；参考图编辑；缺图/重复图不得完成；不以截图替代 |
-| P1 | 真实长任务与故障恢复 | 注入时钟模拟 >1 小时、真实进程重启/并发测试通过；真实 >1 小时运行未验收 | 真实长任务与断连/进程重启后不重发，不跨会话取结果；工具写入不重放 |
-| P1 | 完整运行时安装/回滚及桌面加载 | 本地 CLI 插件安装/卸载通过；完整在线 setup/rollback、桌面技能可用性未验收 | 原审批/沙箱/模型/多 agent 及后加用户字段保留；冲突不覆盖；桌面可发现六技能及 MCP |
-| P1 | 整体结果与打包收尾 | 当前是验证包 | 更新真实验收证据、限制、参考锁和许可证；重新打包并验证干净环境安装 |
-| 范围外 | 实时语音实现 | `voice` 明确返回 `not_implemented` | 首版保持接口；不启动麦克风，不用 TTS 冒充实时语音 |
+CR、持续协作、研究、图像一直由 Codex 原生 Browser Use 操作 Chrome。完整 agent 当前沿用上游独立 Browser + tool broker，所以需要单独登录；这不是把默认四流程改到另一个浏览器。不得复制 cookies、浏览器 profile、凭证或主账号 auth 来填补独立登录。
 
-用户已明确接受本轮“图像生成成功即可”，因此原图下载不阻塞这次 GitHub 交接。但最终产品仍保留原图/编辑/批次要求；不能因此把 partial 任务改为 completed 或删除校验。
+保留原审批、沙箱和模型路由；不启用自动批准，不把网页普通文本执行为 shell，不用模型 API 或私有 HTTP 接口替代网页权限。登录、CAPTCHA 和连接器授权由使用者按平台流程完成。公开证据不包含主机绝对路径、nonce、扩展身份、私人会话 URL 或任务数据库。
 
-## 关键入口
+## 源码入口
 
-| 文件 | 接力时用途 |
+| 文件 | 用途 |
 |---|---|
-| [src/api.ts](src/api.ts)、[src/types.ts](src/types.ts) | MCP/CLI 参数和状态契约；浏览器观察字段以这里为准 |
-| [src/jobs.ts](src/jobs.ts)、[src/store.ts](src/store.ts) | 预约/确认、恢复、澄清、结果、锁与持久化 |
-| [src/context.ts](src/context.ts) | Git 快照、范围、秘密启发式过滤、源码包和 stale |
-| [src/page-evidence.ts](src/page-evidence.ts) | 当前 DOM 摘录分类；错误不能被页面“回答已完成”掩盖 |
-| [src/runtime.ts](src/runtime.ts)、[docs/runtime.md](docs/runtime.md) | 可选完整运行时的实际入口和固定版本 |
-| [docs/browser-workflow.md](docs/browser-workflow.md)、[skills/](skills/) | Codex 实际执行浏览器步骤；动态读取当前工具 API |
-| [docs/reference-projects.md](docs/reference-projects.md) | 实际采用与调研未采用的上游、许可证和固定 SHA |
-| [docs/evidence/README.md](docs/evidence/README.md) | 已有脱敏日志及它们能证明的边界 |
+| [src/api.ts](src/api.ts)、[src/types.ts](src/types.ts) | 参数、chat/pro/research/image 模式与观察合同 |
+| [src/jobs.ts](src/jobs.ts)、[src/store.ts](src/store.ts) | 预约、确认、恢复、澄清、结果与持久化 |
+| [src/context.ts](src/context.ts) | 快照、覆盖范围、秘密过滤、行号与 stale |
+| [src/page-evidence.ts](src/page-evidence.ts) | 页面错误和进度分类；不凭全页完成字样判成功 |
+| [src/native-browser.ts](src/native-browser.ts)、[src/native-downloads.ts](src/native-downloads.ts) | pageAssets 精确资源导出及正常下载的文件名基线定位 |
+| [src/runtime.ts](src/runtime.ts)、[docs/runtime.md](docs/runtime.md) | 固定上游、生产 launcher、独立配置与回滚 |
+| [docs/browser-workflow.md](docs/browser-workflow.md)、[skills/](skills/) | 当前原生浏览器流程；每次按运行时文档确认 API |
 
-## 直接交给接力 Agent 的提示
+## 交给接力 Agent 的提示
 
-> 请在此仓库继续完成 `docs/plans/2026-10-16-agent-handoff.md` 的待实施规格。先阅读 `HANDOFF.md`、`docs/acceptance.md`、当前代码和差异，保留已有实现。先检查当前浏览器已授权网页会话能否选择 Pro，再按 Pro CR/持续协作、真正 Deep Research、图像、完整 agent 运行时、恢复与发布收尾的依赖顺序执行。默认 Codex 主控，不自动换成模型 API；真实网页权限及登录由使用者完成。常规修复直接做，实际缺少登录或平台授权时只暂停受影响项。每项提供真实模型/轮次/工具事件、脱敏结果和测试证据，区分离线测试与真实账户验收。不要用 mock 或构建成功宣称完整编码完成。语音首版不实现。不得读取或迁移原作者 cookies、密钥或登录状态；不要把凭证、nonce、浏览器 profile、任务数据库提交 Git。完成后更新验收矩阵和打包产物，汇报实际改动、未通过项及恢复方法。
+> 阅读 HANDOFF、验收记录、接力计划和当前差异后，只继续未完成项。默认 Chrome 普通 GPT-6 chat，实际核对模型与档位，Pro 暂缓。复用已验证的 CR、本地修复、研究报告和单图编辑下载结果；关注 production launcher、独立登录及真实工具循环、CR 重载限制、研究澄清/计划、真实批次和长任务恢复。常规范围内修复直接做，缺少登录或平台授权时保留页面，只暂停受影响项。未知提交先查原会话，不重复发送；未知写工具状态不重放。把自动测试、真实网页观察和完整 agent 工具事件分别记录。不要复制登录状态、关闭审批/沙箱或自动切模型 API。仅发布脱敏证据，完成后同步验收和发行范围。

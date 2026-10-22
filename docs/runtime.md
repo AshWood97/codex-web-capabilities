@@ -1,4 +1,4 @@
-# 可选网页 Pro 完整编码运行时
+# 可选网页 GPT-6 完整编码运行时
 
 基础插件已打包本地 MCP，不需要 Bun、tunnel 或账户 API key。只有完整 agent 模式需要锁定的独立上游运行时。它通过网页模型和原生 Codex 工具循环工作，不调用模型推理 API。
 
@@ -10,7 +10,7 @@
 node dist/cli.mjs runtime prepare
 ```
 
-它克隆 `miuuyy/codex-chatgpt-web` 并 checkout 固定 SHA `f137c2f84da5df214c1e228d74f5ff43e7641c48`，校验 HEAD 和 tracked diff，按两个 bun.lock 安装主程序与 launcher 依赖。Git 下载中断保留 source.staging 供检查；不会把不完整克隆当成功。运行时约束见 runtime/integration-policy.json。源码留在用户数据目录，不写入插件缓存。
+它克隆 `miuuyy/codex-chatgpt-web` v6.1.13 并 checkout 固定 SHA `6f43747eb5585ca623c0617e729826dfd680c5b7`，校验 HEAD 和 tracked diff，按两个 bun.lock 安装主程序与 launcher 依赖。Git 下载中断保留 source.staging 供检查；不会把不完整克隆当成功。运行时约束见 runtime/integration-policy.json。源码留在用户数据目录，不写入插件缓存。
 
 默认位置：`~/.local/share/codex-web-capabilities/runtime/`；可通过 CWC_HOME 选择专用目录。
 
@@ -27,7 +27,9 @@ node dist/cli.mjs runtime prepare
 node dist/cli.mjs runtime launcher
 ```
 
-在独立 launcher 完成 ChatGPT 登录。这里与技能默认 Chrome 会话独立。首次启动安装/构建 launcher 可能较慢。不要把主 Codex 的 Chrome cookie 复制过来。必须使用 launcher 生成的 browser-host descriptor；不推测固定位置。可在 profile/runtime 中查看 launcher 写出的描述文件名，文件内容可能包含本地 token，不在答复中打印。
+launcher 顺序构建 browser helper、构建 launcher renderer，再运行 launcher 的 `start` 生产入口。上游 `app`/`dev` 入口会传入 `--dev-profile`，进入模拟工具的 DEV harness；本插件使用生产入口，保留 `$CWC_HOME/runtime/profile`、`codex-home`、`launcher-data` 三个隔离目录。prepare、launcher、configure、doctor 和 exec 应使用同一个 CWC_HOME。子进程显式使用已记录的 Bun 路径，并清理继承的 DEV/Vite、外部 launcher 和额外 Codex home 等环境覆盖。
+
+在独立 launcher 完成 ChatGPT 登录。这里与技能默认 Chrome 会话独立。首次构建 launcher 可能较慢。不要把主 Codex 的 Chrome cookie 复制过来。必须使用 launcher 生成的 browser-host descriptor；不推测固定位置。可在 profile/runtime 中查看 launcher 写出的描述文件名，文件内容可能包含本地 token，不在答复中打印。旧 DEV 窗口应正常退出，随后用本命令打开隔离生产窗口并完成登录。
 
 完整模式需要 ChatGPT Developer Mode/相应 MCP 连接权限，以及官方 tunnel ID 和仅具有 Tunnels Read + Use 的 runtime key 文件。它用于 MCP 隧道，不是模型推理。账户/工作区没有权限时报告阻塞，不用其他接口绕过。
 
@@ -62,7 +64,7 @@ configure 仅在独立 codex-home 中运行上游 setup，首次可复制当前 
 {
   "root": "/absolute/path/to/authorized/repo",
   "promptFile": "/absolute/path/to/task.txt",
-  "model": "VISIBLE_WEB_PRO_MODEL_ID",
+  "model": "VISIBLE_WEB_GPT6_MODEL_ID",
   "codex": "/absolute/path/to/codex"
 }
 ```

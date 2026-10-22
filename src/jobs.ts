@@ -6,7 +6,7 @@ import { Store } from './store.js';
 import { assert, CwcError } from './errors.js';
 import { snapshot, bundle, hash, hasSecret, isStale, inside } from './context.js';
 import type { ContextInput } from './context.js';
-import type { Binding, Database, Finding, Job, Kind, Observation } from './types.js';
+import type { Binding, Database, Finding, Job, Kind, Mode, Observation } from './types.js';
 
 const terminal = new Set(['completed','cancelled','failed']);
 const occupied = new Set(['bound','send_pending','running','waiting_user','partial','cancel_requested']);
@@ -15,25 +15,41 @@ function sameBinding(a: Binding, b: Binding) { return a.browser === b.browser &&
 function checkBinding(j: Job, b: Binding) { assert(j.binding && sameBinding(j.binding, b), 'BINDING_MISMATCH', 'Observation belongs to a different browser, tab or conversation.'); }
 function chatUrl(url: string) { try { const u = new URL(url); return u.origin === 'https://chatgpt.com' && /^\/c\/[\w-]+\/?$/.test(u.pathname) && !u.search && !u.hash; } catch { return false; } }
 function bump(j: Job, now: number) { j.updated = now; }
+function defaultMode(kind: Kind): Mode { return kind === 'research' ? 'research' : kind === 'image' ? 'image' : 'chat'; }
+function jobMode(j: Job): Mode { return j.expectedMode ?? j.mode ?? (j.kind === 'research' ? 'research' : j.kind === 'image' ? 'image' : 'pro'); }
+function compatibleMode(kind: Kind, mode: Mode) { return kind === 'research' ? mode === 'research' : kind === 'image' ? mode === 'image' : mode === 'chat' || mode === 'pro'; }
+function actualMode(j: Job) { return j.actualMode ?? (j.actualModel !== undefined ? jobMode(j) : undefined); }
+function effortLevel(effort?: string) {
+  switch (effort?.toLowerCase()) {
+    case '高': case 'high': return 'high';
+    case '中': case 'medium': return 'medium';
+    case '低': case 'low': return 'low';
+    case '超高': case 'extrahigh': case 'extra high': case 'xhigh': return 'xhigh';
+    case 'pro': return 'pro';
+    case 'max': return 'max';
+    default: return effort;
+  }
+}
 export function incompleteResearch(text: string) {
   return !text.trim() || /^(called tool|researching[.…]*|正在研究[.…]*|determining steps for creating a report[.…]*|research plan|研究计划)$/i.test(text.trim()) || text.trim().length < 120;
 }
 function publicJob(j: Job) {
   const { snapshot: s, nonce: _nonce, capability: _cap, candidate: _candidate, ...rest } = j;
-  return { ...rest, snapshot: s && { id: s.id, root: s.root, head: s.head, coverage: s.coverage, files: s.files.map(({text: _text, ...file})=>file), omitted: s.omitted },
+  return { ...rest, mode: jobMode(j), expectedMode: j.expectedMode ?? (j.expectedModel !== undefined ? jobMode(j) : undefined), actualMode: actualMode(j), snapshot: s && { id: s.id, root: s.root, head: s.head, coverage: s.coverage, files: s.files.map(({text: _text, ...file})=>file), omitted: s.omitted },
     nextAction: j.status === 'send_pending' ? 'Inspect the bound page and recover submission evidence. NEVER send again.' : j.status === 'cancel_requested' ? 'Stop the bound web turn, verify it stopped, then confirm cancellation.' : undefined };
 }
 export class Jobs {
   constructor(readonly store: Store, readonly clock: () => number = Date.now) {}
-  async prepare(input: { kind: Kind; prompt: string; context?: ContextInput; expectedImages?: number; outputDir?: string; parent?: string }) {
+  async prepare(input: { kind: Kind; mode?: Mode; prompt: string; context?: ContextInput; expectedImages?: number; outputDir?: string; parent?: string }) {
     assert(input.prompt.trim() && !hasSecret(input.prompt), 'INVALID_PROMPT', 'Prompt is empty or contains secret-like material.');
+    assert(input.mode === undefined || compatibleMode(input.kind,input.mode), 'MODE_MISMATCH', 'Wrong webpage capability selected.');
     const id = randomUUID(); const now = this.clock();
     const s = input.context ? snapshot(input.context) : undefined;
     assert(input.kind !== 'review' || s, 'REVIEW_CONTEXT_REQUIRED', 'Code review requires a repository snapshot.');
     const dir = this.store.path('jobs', id); mkdirSync(dir, { recursive: true, mode: 0o700 });
     const outputDir = resolve(input.outputDir ?? join(dir, 'artifacts')); mkdirSync(outputDir, { recursive: true, mode: 0o700 });
     const j: Job = { id, kind: input.kind, prompt: input.prompt, promptHash: hash(input.prompt), status: 'prepared', created: now, updated: now,
-      repoId: s && hash(s.root), snapshot: s, parent: input.parent, expectedImages: input.expectedImages ?? 1, outputDir: realpathSync(outputDir), baselineTurns: [], observations: [], artifacts: [], findings: [] };
+      repoId: s && hash(s.root), snapshot: s, parent: input.parent, mode: input.mode ?? defaultMode(input.kind), expectedMode: input.mode, expectedImages: input.expectedImages ?? 1, outputDir: realpathSync(outputDir), baselineTurns: [], observations: [], artifacts: [], findings: [] };
     assert(j.expectedImages >= 1 && j.expectedImages <= 9, 'IMAGE_COUNT', 'Expected image count must be 1–9.');
     if (s) writeFileSync(join(dir, 'context.md'), bundle(s), { mode: 0o600 });
     writeFileSync(join(dir, 'prompt.txt'), this.prompt(j), { mode: 0o600 });
@@ -42,6 +58,9 @@ export class Jobs {
         const parent = get(db, j.parent);
         assert(terminal.has(parent.status), 'PARENT_ACTIVE', 'Wait for or cancel the parent before a continuation.');
         assert(parent.repoId === j.repoId, 'REPO_MISMATCH', 'Continuation must use the same repository.');
+        const mode=jobMode(parent);
+        assert(compatibleMode(j.kind,mode) && (input.mode === undefined || input.mode === mode), 'MODE_MISMATCH', 'Continuation must preserve the parent webpage mode.');
+        j.mode=mode; j.expectedMode=mode;
         if (parent.binding?.conversation && parent.status === 'completed') j.binding = { ...parent.binding };
       }
       if (Object.values(db.jobs).filter(x => occupied.has(x.status)).length >= db.maxConcurrent) j.status = 'queued';
@@ -69,28 +88,35 @@ export class Jobs {
       j.binding = binding; j.baselineTurns = [...new Set(baselineTurns)]; j.status = 'bound'; bump(j,this.clock()); return publicJob(j);
     });
   }
-  async reserve(id: string, input: { binding: Binding; model: string; mode: 'pro'|'research'|'image'; attachmentsReady: boolean }) {
+  async reserve(id: string, input: { binding: Binding; model: string; mode: Mode; effort?: string; attachmentsReady: boolean }) {
     return this.store.transact(db => {
       const j=get(db,id); checkBinding(j,input.binding); assert(j.status === 'bound','ALREADY_RESERVED','Submission was already reserved. Inspect the page; do not resubmit.');
       assert(input.attachmentsReady,'ATTACHMENTS_NOT_READY','Wait for all attachments to finish uploading.');
       assert(input.model.trim(),'MODEL_REQUIRED','Observe the selected model first.');
-      assert((j.kind === 'research' ? 'research' : j.kind === 'image' ? 'image' : 'pro') === input.mode,'MODE_MISMATCH','Wrong webpage capability selected.');
+      const fixedMode=j.expectedMode ?? (j.mode === undefined ? jobMode(j) : undefined);
+      assert(compatibleMode(j.kind,input.mode) && (fixedMode === undefined || input.mode === fixedMode),'MODE_MISMATCH','Wrong webpage mode selected; preserve the task or parent mode.');
       if (j.snapshot) assert(!isStale(j.snapshot),'SNAPSHOT_STALE','Repository changed before submission. Prepare a new snapshot.');
-      j.expectedModel=input.model; j.nonce=randomBytes(24).toString('hex'); j.status='send_pending'; bump(j,this.clock());
+      j.mode=input.mode; j.expectedMode=input.mode; j.expectedModel=input.model; j.expectedEffort=input.effort;
+      j.nonce=randomBytes(24).toString('hex'); j.status='send_pending'; bump(j,this.clock());
       return { jobId:id, nonce:j.nonce, instruction:'Send exactly once, then confirm the new user turn. If uncertain, recover; never reserve again.' };
     });
   }
-  async submission(id: string, input: { binding: Binding; nonce: string; turn: string; visiblePrompt: string; model: string }) {
+  async submission(id: string, input: { binding: Binding; nonce: string; turn: string; visiblePrompt: string; model: string; mode?: Mode; effort?: string }) {
     return this.store.transact(db => {
       const j=get(db,id); checkBinding(j,input.binding);
       assert(j.nonce === input.nonce,'INVALID_NONCE','Submission capability is invalid.');
       assert(input.model === j.expectedModel,'MODEL_MISMATCH','Selected model changed during submission.');
+      const mode=jobMode(j);
+      assert(input.mode === undefined || input.mode === mode,'MODE_MISMATCH','Selected webpage mode changed during submission.');
+      const effort=j.expectedEffort ?? (j.turn ? j.actualEffort : undefined);
+      assert(effort === undefined || effortLevel(input.effort) === effortLevel(effort),'EFFORT_MISMATCH','Selected effort changed or was not observed during submission.');
       if (j.turn) { assert(j.turn === input.turn,'TURN_MISMATCH','A different turn is already recorded.'); return publicJob(j); }
       assert(j.status === 'send_pending','INVALID_STATE','No pending submission.');
       assert(input.turn && !j.baselineTurns.includes(input.turn),'STALE_TURN','This turn existed before submission.');
       assert(input.visiblePrompt.includes(`CWC-${id}`) && input.visiblePrompt.includes(j.prompt.trim()),'PROMPT_NOT_OBSERVED','The actual submitted user message was not verified.');
       if (input.binding.conversation) { assert(chatUrl(input.binding.conversation),'INVALID_CONVERSATION','Invalid conversation URL.'); j.binding!.conversation=input.binding.conversation; }
-      j.turn=input.turn; j.actualModel=input.model; j.submitted=this.clock(); j.status='running'; bump(j,this.clock()); return publicJob(j);
+      j.turn=input.turn; j.actualModel=input.model; j.actualMode=mode; j.actualEffort=input.effort;
+      j.submitted=this.clock(); j.status='running'; bump(j,this.clock()); return publicJob(j);
     });
   }
   async recover(id:string, binding: Binding, pendingEvidence?: {nonce:string;visiblePrompt:string}) {
@@ -119,10 +145,12 @@ export class Jobs {
       assert(j.status==='waiting_user' && j.turn,'NO_QUESTION','No pending clarification.');
       assert(answer.trim() && !hasSecret(answer),'INVALID_ANSWER','Answer is empty or contains secret-like material.');
       const rounds=this.store.path('jobs',id,'rounds');mkdirSync(rounds,{recursive:true,mode:0o700});
-      writeFileSync(join(rounds,`${(j.history?.length??0)+1}.json`),JSON.stringify({turn:j.turn,prompt:this.prompt(j),promptHash:j.promptHash,question:j.userQuestion,model:j.actualModel,binding:j.binding,submitted:j.submitted},null,2),{mode:0o600});
-      (j.history??=[]).push({turn:j.turn,promptHash:j.promptHash,submitted:j.submitted});
+      const mode=jobMode(j);
+      writeFileSync(join(rounds,`${(j.history?.length??0)+1}.json`),JSON.stringify({turn:j.turn,prompt:this.prompt(j),promptHash:j.promptHash,question:j.userQuestion,model:j.actualModel,mode:actualMode(j),effort:j.actualEffort,expectedEffort:j.expectedEffort,binding:j.binding,submitted:j.submitted},null,2),{mode:0o600});
+      (j.history??=[]).push({turn:j.turn,promptHash:j.promptHash,submitted:j.submitted,model:j.actualModel,mode:actualMode(j),effort:j.actualEffort});
       j.baselineTurns.push(j.turn); j.prompt=`Clarification answer for this task: ${answer}`; j.promptHash=hash(j.prompt);
       j.turn=undefined; j.nonce=undefined; j.candidate=undefined; j.submitted=undefined; j.userQuestion=undefined;
+      j.mode=mode; j.expectedMode=mode; j.expectedModel=undefined; j.expectedEffort=undefined; j.actualModel=undefined; j.actualMode=undefined; j.actualEffort=undefined;
       j.status='bound'; bump(j,this.clock());
       const prompt=this.prompt(j); writeFileSync(this.store.path('jobs',id,'prompt.txt'),prompt,{mode:0o600});
       return {...publicJob(j),prompt,promptPath:this.store.path('jobs',id,'prompt.txt')};
@@ -133,8 +161,11 @@ export class Jobs {
       const j=get(db,id); checkBinding(j,observation.binding); assert(j.turn===observation.turn,'TURN_MISMATCH','Observation does not belong to the submitted turn.');
       assert(!terminal.has(j.status) && j.status !== 'cancel_requested','TERMINAL_JOB','Observation cannot reopen a finished or cancelling job.');
       assert(j.actualModel===observation.model,'MODEL_MISMATCH','Actual model differs from the verified selection.');
-      const mode=j.kind==='research'?'research':j.kind==='image'?'image':'pro';
+      const mode=jobMode(j);
       assert(observation.mode===mode,'MODE_MISMATCH','Webpage mode changed.');
+      const effort=j.actualEffort ?? j.expectedEffort;
+      assert(effort === undefined || effortLevel(observation.effort) === effortLevel(effort),'EFFORT_MISMATCH','Observed effort differs from the verified selection or was not captured.');
+      j.mode=mode; j.expectedMode=mode; j.actualMode=observation.mode; j.actualEffort=observation.effort;
       const now=this.clock(); const text=observation.text??'';
       j.observations.push({at:now,phase:observation.phase,hash:hash(text),textLength:text.length});
       j.researchStarted ||= observation.researchStarted===true;
@@ -158,7 +189,7 @@ export class Jobs {
       const dir=this.store.path('jobs',id);
       const report=observation.citations?.length ? text+'\n\n## Sources\n\n'+observation.citations.map((url,i)=>`- [${i+1}](<${url}>)`).join('\n')+'\n' : text;
       writeFileSync(join(dir,'response.md'),report,{mode:0o600});
-      writeFileSync(join(dir,'receipt.json'),JSON.stringify({jobId:id,promptHash:j.promptHash,responseHash:hash(report),bodyHash:hash(text),citations:observation.citations,snapshot:j.snapshot?.id,model:j.actualModel,binding:j.binding,turn:j.turn,artifacts:j.artifacts,completed:now,stale:j.stale},null,2),{mode:0o600});
+      writeFileSync(join(dir,'receipt.json'),JSON.stringify({jobId:id,promptHash:j.promptHash,responseHash:hash(report),bodyHash:hash(text),citations:observation.citations,snapshot:j.snapshot?.id,model:j.actualModel,mode:j.actualMode,effort:j.actualEffort,binding:j.binding,turn:j.turn,artifacts:j.artifacts,completed:now,stale:j.stale},null,2),{mode:0o600});
       return publicJob(j);
     });
   }
@@ -181,7 +212,7 @@ export class Jobs {
     });
   }
   async status(id:string) { return this.store.transact(db=>{const j=get(db,id);j.stale=j.snapshot?isStale(j.snapshot):false;return publicJob(j);}); }
-  async list() { return this.store.transact(db=>Object.values(db.jobs).map(j=>({id:j.id,kind:j.kind,status:j.status,updated:j.updated,repoId:j.repoId}))); }
+  async list() { return this.store.transact(db=>Object.values(db.jobs).map(j=>({id:j.id,kind:j.kind,status:j.status,updated:j.updated,repoId:j.repoId,mode:jobMode(j),actualModel:j.actualModel,actualMode:actualMode(j),actualEffort:j.actualEffort}))); }
   async result(id:string) { return this.store.transact(db=>{const j=get(db,id);assert(j.status==='completed','RESULT_NOT_READY','Task has not completed.');j.stale=j.snapshot?isStale(j.snapshot):false;return {...publicJob(j),responsePath:this.store.path('jobs',id,'response.md'),receiptPath:this.store.path('jobs',id,'receipt.json')};}); }
   async cancel(id:string, browserStopped=false) { return this.store.transact(db=>{
     const j=get(db,id); if(terminal.has(j.status))return publicJob(j);

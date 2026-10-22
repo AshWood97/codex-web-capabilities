@@ -1,22 +1,37 @@
 # Third-party notices
 
 Codex Web Capabilities is MIT licensed.
-The optional upstream runtime is installed separately, preserving its own LICENSE and dependency notices. No upstream project source files were copied into this plugin. Design references and exact inspected revisions are in docs/reference-projects.md.
+The optional upstream runtime is installed separately, preserving its own LICENSE and dependency notices. No upstream project source files were copied into this plugin. References below distinguish runtime dependencies, independent design adaptations, and research candidates; listing a project does not mean its code was adopted. Exact revisions, module choices, and modification notes are in docs/reference-projects.md.
 
 ## Referenced projects
 
-- miuuyy/codex-chatgpt-web @ f137c2f84da5df214c1e228d74f5ff43e7641c48 — MIT. https://github.com/miuuyy/codex-chatgpt-web/tree/f137c2f84da5df214c1e228d74f5ff43e7641c48
-- pauljunsukhan/codex-chatgpt-pro-plugin @ 0cc5c5509ebaccfc7dad45b9e02a0f86407c817c — MIT. https://github.com/pauljunsukhan/codex-chatgpt-pro-plugin/tree/0cc5c5509ebaccfc7dad45b9e02a0f86407c817c
-- rebel0789/codexpro @ 113472c6ff0a1516b6f223a43cd355abdf2e61ae — MIT. https://github.com/rebel0789/codexpro/tree/113472c6ff0a1516b6f223a43cd355abdf2e61ae
-- NAMUORI00/cross-review-bridge @ 61ba6108ae59be3860b97adf5baff4bd7bb33489 — MIT. https://github.com/NAMUORI00/cross-review-bridge/tree/61ba6108ae59be3860b97adf5baff4bd7bb33489
-- openai/tunnel-client @ aa603c51565b6b1f55b5bcf10880d79033fb3987 — Apache-2.0. https://github.com/openai/tunnel-client/tree/aa603c51565b6b1f55b5bcf10880d79033fb3987
-- Evanlau1798/codex-chatgpt-web @ de76195c82a33fa70ec1cb60a277fe55b0332664 — MIT. https://github.com/Evanlau1798/codex-chatgpt-web/tree/de76195c82a33fa70ec1cb60a277fe55b0332664
-- steipete/oracle @ 14ae9f9a00e222d4b08f34ceccafc86b5a3e815f — MIT. https://github.com/steipete/oracle/tree/14ae9f9a00e222d4b08f34ceccafc86b5a3e815f
-- Yubo-Cao/codex-chatgpt-pro-bridge @ 5f2fbd530db0b7c8d05159571860b9ec2b19c0f9 — MIT. https://github.com/Yubo-Cao/codex-chatgpt-pro-bridge/tree/5f2fbd530db0b7c8d05159571860b9ec2b19c0f9
-- yuyou-dev/ChatGPT-Bridge @ 6b5eef1343158d37ce2bc4245892f7b3238fc5f0 — MIT. https://github.com/yuyou-dev/ChatGPT-Bridge/tree/6b5eef1343158d37ce2bc4245892f7b3238fc5f0
+Research checked: 2026-10-22. Code ports: none.
+
+### Optional runtime dependencies
+
+- [miuuyy/codex-chatgpt-web @ 6f43747eb5585ca623c0617e729826dfd680c5b7](https://github.com/miuuyy/codex-chatgpt-web/tree/6f43747eb5585ca623c0617e729826dfd680c5b7) — [MIT](https://github.com/miuuyy/codex-chatgpt-web/blob/6f43747eb5585ca623c0617e729826dfd680c5b7/LICENSE). Status: optional-separate-install.
+- [openai/tunnel-client @ aa603c51565b6b1f55b5bcf10880d79033fb3987](https://github.com/openai/tunnel-client/tree/aa603c51565b6b1f55b5bcf10880d79033fb3987) — [Apache-2.0](https://github.com/openai/tunnel-client/blob/aa603c51565b6b1f55b5bcf10880d79033fb3987/LICENSE). Status: optional-separate-install.
+
+### Design references
+
+- [pauljunsukhan/codex-chatgpt-pro-plugin @ 0cc5c5509ebaccfc7dad45b9e02a0f86407c817c](https://github.com/pauljunsukhan/codex-chatgpt-pro-plugin/tree/0cc5c5509ebaccfc7dad45b9e02a0f86407c817c) — [MIT](https://github.com/pauljunsukhan/codex-chatgpt-pro-plugin/blob/0cc5c5509ebaccfc7dad45b9e02a0f86407c817c/LICENSE). Status: independently-adapted.
+- [rebel0789/codexpro @ 113472c6ff0a1516b6f223a43cd355abdf2e61ae](https://github.com/rebel0789/codexpro/tree/113472c6ff0a1516b6f223a43cd355abdf2e61ae) — [MIT](https://github.com/rebel0789/codexpro/blob/113472c6ff0a1516b6f223a43cd355abdf2e61ae/LICENSE). Status: independently-adapted.
+- [NAMUORI00/cross-review-bridge @ 61ba6108ae59be3860b97adf5baff4bd7bb33489](https://github.com/NAMUORI00/cross-review-bridge/tree/61ba6108ae59be3860b97adf5baff4bd7bb33489) — [MIT](https://github.com/NAMUORI00/cross-review-bridge/blob/61ba6108ae59be3860b97adf5baff4bd7bb33489/LICENSE). Status: independently-adapted. 2026-10-22 Chrome ordinary chat (GPT-6, 高): the shipping.mjs:3 boundary issue was found, two local tests passed after the fix, and same-chat rereview returned zero findings. This does not verify the optional full-harness runtime.
+- [Evanlau1798/codex-chatgpt-web @ b4531c897662f1da4aa6a08190cf351e1571ae31](https://github.com/Evanlau1798/codex-chatgpt-web/tree/b4531c897662f1da4aa6a08190cf351e1571ae31) — [MIT](https://github.com/Evanlau1798/codex-chatgpt-web/blob/b4531c897662f1da4aa6a08190cf351e1571ae31/LICENSE). Status: partially-adapted. de76195c82a33fa70ec1cb60a277fe55b0332664 is the historical 2026-10-16 design reference; b4531c897662f1da4aa6a08190cf351e1571ae31 is the snapshot inspected on 2026-10-22. The compaction fixes were not ported.
+- [steipete/oracle @ bfd25bd1d85c028af60bb708391d49e936c40701](https://github.com/steipete/oracle/tree/bfd25bd1d85c028af60bb708391d49e936c40701) — [MIT](https://github.com/steipete/oracle/blob/bfd25bd1d85c028af60bb708391d49e936c40701/LICENSE). Status: partially-adapted. 2026-10-22: current-turn Deep Research iframe extraction succeeded after one component retry without a new user message (3832 characters; UI: 9 sources, 9 citations, 122 searches; extracted DOM: 8 HTTPS sources). The adaptation uses native browser observations. The report technical claims were not independently audited.
+- [Yubo-Cao/codex-chatgpt-pro-bridge @ 5f2fbd530db0b7c8d05159571860b9ec2b19c0f9](https://github.com/Yubo-Cao/codex-chatgpt-pro-bridge/tree/5f2fbd530db0b7c8d05159571860b9ec2b19c0f9) — [MIT](https://github.com/Yubo-Cao/codex-chatgpt-pro-bridge/blob/5f2fbd530db0b7c8d05159571860b9ec2b19c0f9/LICENSE). Status: independently-adapted.
+- [yuyou-dev/ChatGPT-Bridge @ 6b5eef1343158d37ce2bc4245892f7b3238fc5f0](https://github.com/yuyou-dev/ChatGPT-Bridge/tree/6b5eef1343158d37ce2bc4245892f7b3238fc5f0) — [MIT](https://github.com/yuyou-dev/ChatGPT-Bridge/blob/6b5eef1343158d37ce2bc4245892f7b3238fc5f0/LICENSE). Status: partially-adapted. 2026-10-22: both 1254x1254 files were saved via Chrome preview Download and opened (initial: 1721014 bytes; edited: 1660188 bytes). After an initial download-event timeout, the first file was located by unique image name and click time without a pre-click filesystem baseline; only the edited file used the full native-downloads baseline helper. pageAssets did not expose the blob assets.
+- [adamallcock/codex-chatgpt-control @ 1e505394a01cec91d0b4880f3bc6c0cfbd45275c](https://github.com/adamallcock/codex-chatgpt-control/tree/1e505394a01cec91d0b4880f3bc6c0cfbd45275c) — [MIT](https://github.com/adamallcock/codex-chatgpt-control/blob/1e505394a01cec91d0b4880f3bc6c0cfbd45275c/LICENSE). Status: pending-native-adaptation.
+- [TianLin0509/chatgpt-web-images @ 44ba51a33b63a982e5a19778911eabe08969d28a](https://github.com/TianLin0509/chatgpt-web-images/tree/44ba51a33b63a982e5a19778911eabe08969d28a) — [MIT](https://github.com/TianLin0509/chatgpt-web-images/blob/44ba51a33b63a982e5a19778911eabe08969d28a/LICENSE). Status: normal-download-ui-design-only. Only the normal-download UI concept was borrowed; the specific share-image -> This image -> Download sequence was not adopted. The verified path uses Chrome preview Download, with the independent pre-click baseline helper used only for the edited image.
+- [leeheewon-01/chatgpt-bridge @ ca69f099b0a4fc9c808cd80460def1b45f4d5cfb](https://github.com/leeheewon-01/chatgpt-bridge/tree/ca69f099b0a4fc9c808cd80460def1b45f4d5cfb) — [MIT](https://github.com/leeheewon-01/chatgpt-bridge/blob/ca69f099b0a4fc9c808cd80460def1b45f4d5cfb/LICENSE). Status: independently-adapted. Markdown links and the Sources list are independent formatting of natively extracted HTTPS sources. No upstream citation-token converter, CDP, or widgetState reader was copied; mocked tests are not live verification.
+
+### Research only — not ported
+
+- [XiaoDuoYa/codex-with-chatgpt @ 535a07dbb7aee887924c53767d985c09d405319d](https://github.com/XiaoDuoYa/codex-with-chatgpt/tree/535a07dbb7aee887924c53767d985c09d405319d) — [MIT](https://github.com/XiaoDuoYa/codex-with-chatgpt/blob/535a07dbb7aee887924c53767d985c09d405319d/LICENSE). Status: future-design-only.
+- [Wangnov/chatgpt-skill @ 0dab47ec4bd7966e1a714bac45ad3c4e935f0f4c](https://github.com/Wangnov/chatgpt-skill/tree/0dab47ec4bd7966e1a714bac45ad3c4e935f0f4c) — No license file found; code excluded. Status: excluded-no-license.
 
 openai/tunnel-client is an indirect optional runtime dependency pinned by upstream to release v0.0.16 (Apache-2.0). No tunnel binary is bundled.
-Oracle cookie-based download code and all projects without a verified license are excluded.
+Private backend/session/cookie download routes and unlicensed project code are excluded. Live verification is limited to the dated observations recorded above and in docs/reference-projects.md and docs/acceptance.md.
 
 ## JavaScript production dependency licenses
 

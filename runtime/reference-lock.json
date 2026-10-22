@@ -1,10 +1,37 @@
 [
   {
     "repo": "miuuyy/codex-chatgpt-web",
-    "sha": "f137c2f84da5df214c1e228d74f5ff43e7641c48",
+    "sha": "6f43747eb5585ca623c0617e729826dfd680c5b7",
     "license": {
-      "spdx_id": "MIT"
-    }
+      "spdx_id": "MIT",
+      "source_url": "https://github.com/miuuyy/codex-chatgpt-web/blob/6f43747eb5585ca623c0617e729826dfd680c5b7/LICENSE"
+    },
+    "previouslyInspected": [
+      {
+        "sha": "f137c2f84da5df214c1e228d74f5ff43e7641c48",
+        "checkedAt": "2026-10-16"
+      }
+    ],
+    "version": "v6.1.13",
+    "stars": 14791,
+    "forks": 1161,
+    "adoption": "runtime-dependency",
+    "adoptionStatus": "optional-separate-install",
+    "adoptedModules": [
+      "Responses/SSE",
+      "task-bound MCP",
+      "native tool loop",
+      "compaction",
+      "retained sessions"
+    ],
+    "modificationNotes": "Installed at the fixed upstream revision by src/runtime.ts without changing upstream source. Wrapper configuration, approval, sandbox, and isolated-profile constraints remain local. This revision is not evidence of a successful live full-harness run.",
+    "sourceFiles": [
+      "src/adapters/chatgpt-web/turn-broker.ts",
+      "src/adapters/chatgpt-web/turn-execution.ts",
+      "src/codex-integration.ts",
+      "src/tunnel.ts"
+    ],
+    "checkedAt": "2026-10-22"
   },
   {
     "repo": "pauljunsukhan/codex-chatgpt-pro-plugin",
@@ -14,10 +41,21 @@
       "name": "MIT License",
       "spdx_id": "MIT",
       "url": "https://api.github.com/licenses/mit",
-      "node_id": "MDc6TGljZW5zZTEz"
+      "node_id": "MDc6TGljZW5zZTEz",
+      "source_url": "https://github.com/pauljunsukhan/codex-chatgpt-pro-plugin/blob/0cc5c5509ebaccfc7dad45b9e02a0f86407c817c/LICENSE"
     },
     "stars": 83,
-    "forks": 9
+    "forks": 9,
+    "adoption": "design-reference",
+    "adoptionStatus": "independently-adapted",
+    "adoptedModules": [
+      "repository rooms",
+      "source bundles",
+      "line mapping",
+      "review receipts"
+    ],
+    "modificationNotes": "src/context.ts and src/jobs.ts are independent implementations. The upstream CDP transport and global browser lock are not adopted.",
+    "checkedAt": "2026-10-22"
   },
   {
     "repo": "rebel0789/codexpro",
@@ -27,10 +65,20 @@
       "name": "MIT License",
       "spdx_id": "MIT",
       "url": "https://api.github.com/licenses/mit",
-      "node_id": "MDc6TGljZW5zZTEz"
+      "node_id": "MDc6TGljZW5zZTEz",
+      "source_url": "https://github.com/rebel0789/codexpro/blob/113472c6ff0a1516b6f223a43cd355abdf2e61ae/LICENSE"
     },
-    "stars": 2090,
-    "forks": 221
+    "stars": 2092,
+    "forks": 221,
+    "adoption": "design-reference",
+    "adoptionStatus": "independently-adapted",
+    "adoptedModules": [
+      "repository export",
+      "workspace path boundaries",
+      "optional read-only MCP"
+    ],
+    "modificationNotes": "src/context.ts handles paths and secret filtering. The local read-only MCP exposes frozen snapshots; Codex remains the controller.",
+    "checkedAt": "2026-10-22"
   },
   {
     "repo": "NAMUORI00/cross-review-bridge",
@@ -40,10 +88,31 @@
       "name": "MIT License",
       "spdx_id": "MIT",
       "url": "https://api.github.com/licenses/mit",
-      "node_id": "MDc6TGljZW5zZTEz"
+      "node_id": "MDc6TGljZW5zZTEz",
+      "source_url": "https://github.com/NAMUORI00/cross-review-bridge/blob/61ba6108ae59be3860b97adf5baff4bd7bb33489/LICENSE"
     },
     "stars": 0,
-    "forks": 0
+    "forks": 0,
+    "adoption": "design-reference",
+    "adoptionStatus": "independently-adapted",
+    "adoptedModules": [
+      "review material organization",
+      "apply/consider/reject/needs_user findings",
+      "local validation"
+    ],
+    "modificationNotes": "Adapted independently in record_findings and the web review/collaboration workflows. The ordinary-chat review, local fix, and same-chat rereview loop was verified on 2026-10-22. Existing user authorization to fix code does not create another approval step.",
+    "checkedAt": "2026-10-22",
+    "liveVerification": {
+      "checkedAt": "2026-10-22",
+      "browser": "Chrome",
+      "model": "GPT-6",
+      "effort": "高",
+      "mode": "chat",
+      "finding": "shipping.mjs:3 >= 100 boundary",
+      "localTestsPassed": 2,
+      "rereviewFindings": 0
+    },
+    "attributionNote": "2026-10-22 Chrome ordinary chat (GPT-6, 高): the shipping.mjs:3 boundary issue was found, two local tests passed after the fix, and same-chat rereview returned zero findings. This does not verify the optional full-harness runtime."
   },
   {
     "repo": "openai/tunnel-client",
@@ -53,36 +122,112 @@
       "name": "Apache License 2.0",
       "spdx_id": "Apache-2.0",
       "url": "https://api.github.com/licenses/apache-2.0",
-      "node_id": "MDc6TGljZW5zZTI="
+      "node_id": "MDc6TGljZW5zZTI=",
+      "source_url": "https://github.com/openai/tunnel-client/blob/aa603c51565b6b1f55b5bcf10880d79033fb3987/LICENSE"
     },
-    "stars": 568,
-    "forks": 120
+    "stars": 589,
+    "forks": 124,
+    "adoption": "indirect-runtime-dependency",
+    "adoptionStatus": "optional-separate-install",
+    "runtimeRelease": "v0.0.16",
+    "adoptedModules": [
+      "official outbound MCP tunnel"
+    ],
+    "modificationNotes": "The optional upstream runtime pins release v0.0.16. This SHA records the inspected source snapshot, not a claim that it is the release tag. No tunnel binary is bundled.",
+    "checkedAt": "2026-10-22"
   },
   {
     "repo": "Evanlau1798/codex-chatgpt-web",
-    "sha": "de76195c82a33fa70ec1cb60a277fe55b0332664",
+    "sha": "b4531c897662f1da4aa6a08190cf351e1571ae31",
     "license": {
       "key": "mit",
       "name": "MIT License",
       "spdx_id": "MIT",
       "url": "https://api.github.com/licenses/mit",
-      "node_id": "MDc6TGljZW5zZTEz"
+      "node_id": "MDc6TGljZW5zZTEz",
+      "source_url": "https://github.com/Evanlau1798/codex-chatgpt-web/blob/b4531c897662f1da4aa6a08190cf351e1571ae31/LICENSE"
     },
-    "stars": 38,
-    "forks": 7
+    "stars": 39,
+    "forks": 7,
+    "previouslyInspected": [
+      {
+        "sha": "de76195c82a33fa70ec1cb60a277fe55b0332664",
+        "checkedAt": "2026-10-16",
+        "role": "historical-design-reference"
+      }
+    ],
+    "adoption": "design-reference",
+    "adoptionStatus": "partially-adapted",
+    "adoptedModules": [
+      "retained sessions",
+      "retained-session/Bigger Context mutual exclusion"
+    ],
+    "candidateModules": [
+      "compaction progress separated from generation liveness",
+      "bounded local-compaction inactivity"
+    ],
+    "modificationNotes": "The retained-session and Bigger Context design adaptation records the historical 2026-10-16 reference de76195c82a33fa70ec1cb60a277fe55b0332664. The 2026-10-22 inspected snapshot is b4531c897662f1da4aa6a08190cf351e1571ae31. The baseline already retained sessions for 30 minutes; the wrapper enforces context-setting mutual exclusion. The two compaction fixes remain source-reviewed design candidates, not a port of the Enhanced fork or a new runtime dependency.",
+    "relatedCommits": [
+      "d380c4585bc6dcdc7267a686a37ed8449de1721f",
+      "525e377233cc47e22c110681b25abf6262f6733c"
+    ],
+    "sourceFiles": [
+      "src/adapters/chatgpt-web/adapter-runtime-factory.ts",
+      "src/adapters/chatgpt-web/enhanced-compaction.ts",
+      "src/adapters/chatgpt-web/retained-compaction-handoff.ts"
+    ],
+    "checkedAt": "2026-10-22",
+    "designBasisSha": "de76195c82a33fa70ec1cb60a277fe55b0332664",
+    "attributionNote": "de76195c82a33fa70ec1cb60a277fe55b0332664 is the historical 2026-10-16 design reference; b4531c897662f1da4aa6a08190cf351e1571ae31 is the snapshot inspected on 2026-10-22. The compaction fixes were not ported."
   },
   {
     "repo": "steipete/oracle",
-    "sha": "14ae9f9a00e222d4b08f34ceccafc86b5a3e815f",
+    "sha": "bfd25bd1d85c028af60bb708391d49e936c40701",
     "license": {
       "key": "mit",
       "name": "MIT License",
       "spdx_id": "MIT",
       "url": "https://api.github.com/licenses/mit",
-      "node_id": "MDc6TGljZW5zZTEz"
+      "node_id": "MDc6TGljZW5zZTEz",
+      "source_url": "https://github.com/steipete/oracle/blob/bfd25bd1d85c028af60bb708391d49e936c40701/LICENSE"
     },
-    "stars": 4055,
-    "forks": 423
+    "stars": 4064,
+    "forks": 421,
+    "previouslyInspected": [
+      {
+        "sha": "14ae9f9a00e222d4b08f34ceccafc86b5a3e815f",
+        "checkedAt": "2026-10-16"
+      }
+    ],
+    "adoption": "design-reference",
+    "adoptionStatus": "partially-adapted",
+    "adoptedModules": [
+      "current-turn research report ownership contract",
+      "research plan/progress placeholder rejection",
+      "attachment readiness workflow",
+      "native current-turn iframe report extraction"
+    ],
+    "modificationNotes": "docs/browser-workflow.md and the job/evidence checks independently adapt the research lifecycle to Codex native browser observations. Current-turn Deep Research iframe report extraction succeeded on 2026-10-22 after one retry of the initially failed component without adding a user message. The report has 3832 characters; the UI shows 9 sources, 9 citations, and 122 searches, while the extracted DOM body contains 8 HTTPS sources. This verifies the observed report-extraction path, not every plan-confirmation variant. CDP, cookies, private HTTP endpoints, and the cookie-based image downloader are not adopted. The report technical claims were not individually independently audited; this observation verifies mode and complete delivery, not the correctness of every claim.",
+    "sourceFiles": [
+      "src/browser/actions/deepResearch.ts",
+      "src/browser/deepResearchResult.ts",
+      "src/browser/chatgptImages.ts"
+    ],
+    "checkedAt": "2026-10-22",
+    "liveVerification": {
+      "checkedAt": "2026-10-22",
+      "browser": "Chrome",
+      "result": "current-turn Deep Research iframe report extracted",
+      "componentRetries": 1,
+      "newUserMessagesOnRetry": 0,
+      "reportCharacters": 3832,
+      "uiSources": 9,
+      "uiCitations": 9,
+      "uiSearches": 122,
+      "domHttpsSources": 8,
+      "reportClaimsIndependentlyAudited": false
+    },
+    "attributionNote": "2026-10-22: current-turn Deep Research iframe extraction succeeded after one component retry without a new user message (3832 characters; UI: 9 sources, 9 citations, 122 searches; extracted DOM: 8 HTTPS sources). The adaptation uses native browser observations. The report technical claims were not independently audited."
   },
   {
     "repo": "Yubo-Cao/codex-chatgpt-pro-bridge",
@@ -92,10 +237,20 @@
       "name": "MIT License",
       "spdx_id": "MIT",
       "url": "https://api.github.com/licenses/mit",
-      "node_id": "MDc6TGljZW5zZTEz"
+      "node_id": "MDc6TGljZW5zZTEz",
+      "source_url": "https://github.com/Yubo-Cao/codex-chatgpt-pro-bridge/blob/5f2fbd530db0b7c8d05159571860b9ec2b19c0f9/LICENSE"
     },
     "stars": 0,
-    "forks": 0
+    "forks": 0,
+    "adoption": "design-reference",
+    "adoptionStatus": "independently-adapted",
+    "adoptedModules": [
+      "single-send discipline",
+      "two stable observations",
+      "long-task recovery"
+    ],
+    "modificationNotes": "src/jobs.ts persists send_pending and the nonce, requires stable observations 15 seconds apart, and does not resend an uncertain submission.",
+    "checkedAt": "2026-10-22"
   },
   {
     "repo": "yuyou-dev/ChatGPT-Bridge",
@@ -105,9 +260,152 @@
       "name": "MIT License",
       "spdx_id": "MIT",
       "url": "https://api.github.com/licenses/mit",
-      "node_id": "MDc6TGljZW5zZTEz"
+      "node_id": "MDc6TGljZW5zZTEz",
+      "source_url": "https://github.com/yuyou-dev/ChatGPT-Bridge/blob/6b5eef1343158d37ce2bc4245892f7b3238fc5f0/LICENSE"
     },
-    "stars": 16,
-    "forks": 2
+    "stars": 17,
+    "forks": 2,
+    "adoption": "design-reference",
+    "adoptionStatus": "partially-adapted",
+    "adoptedModules": [
+      "current-turn original image import",
+      "expected batch count",
+      "saved-image dimension validation",
+      "native pageAssets list/bundle export using observed exact image URLs"
+    ],
+    "modificationNotes": "src/jobs.ts independently checks imported originals and expected batch count. src/native-browser.ts implements exact observed-URL selection through native pageAssets list/bundle, but the 2026-10-22 Chrome inventory did not include the generated blob assets. Both 1254x1254 image files were saved through Chrome preview Download and opened for viewing: initial image 1721014 bytes, reference-edited image 1660188 bytes. The initial download event timed out; that file was located by its unique observed image name and click time, without a pre-click filesystem baseline. Only the reference-edited image used the full src/native-downloads.ts snapshotImageDownload pre-click baseline and findImageDownload unique-new-file workflow. The successful native-UI download does not verify pageAssets blob export. No cookie/private-API downloader is adopted.",
+    "sourceFiles": [
+      "plugins/chatgpt-bridge/skills/chatgpt-image-generator/SKILL.md",
+      "plugins/chatgpt-bridge/scripts/chatgpt-bridge.mjs"
+    ],
+    "checkedAt": "2026-10-22",
+    "liveVerification": {
+      "checkedAt": "2026-10-22",
+      "browser": "Chrome",
+      "route": "preview Download -> Downloads",
+      "initialImage": {
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1721014,
+        "openedForViewing": true
+      },
+      "referenceEditedImage": {
+        "width": 1254,
+        "height": 1254,
+        "bytes": 1660188,
+        "openedForViewing": true
+      },
+      "pageAssetsBlob": "not present in inventory",
+      "nativeDownloadEvent": "initial-image wait timed out with file present",
+      "downloadResolution": {
+        "initial": "unique observed image name and click time; no pre-click filesystem baseline",
+        "referenceEdited": "snapshotImageDownload pre-click baseline and findImageDownload unique new matching file"
+      }
+    },
+    "attributionNote": "2026-10-22: both 1254x1254 files were saved via Chrome preview Download and opened (initial: 1721014 bytes; edited: 1660188 bytes). After an initial download-event timeout, the first file was located by unique image name and click time without a pre-click filesystem baseline; only the edited file used the full native-downloads baseline helper. pageAssets did not expose the blob assets."
+  },
+  {
+    "repo": "adamallcock/codex-chatgpt-control",
+    "sha": "1e505394a01cec91d0b4880f3bc6c0cfbd45275c",
+    "stars": 406,
+    "forks": 31,
+    "adoption": "design-reference",
+    "adoptionStatus": "pending-native-adaptation",
+    "adoptedModules": [],
+    "candidateModules": [
+      "normalized current-turn ownership classification for ordinary chat"
+    ],
+    "modificationNotes": "Use the ownership conditions as a design reference for native observations; the upstream classifier has not been ported. Ordinary chat ownership does not establish genuine Deep Research mode or report ownership.",
+    "sourceFiles": [
+      "packages/node/src/operations/turn-ownership.ts"
+    ],
+    "checkedAt": "2026-10-22",
+    "license": {
+      "spdx_id": "MIT",
+      "source_url": "https://github.com/adamallcock/codex-chatgpt-control/blob/1e505394a01cec91d0b4880f3bc6c0cfbd45275c/LICENSE"
+    }
+  },
+  {
+    "repo": "TianLin0509/chatgpt-web-images",
+    "sha": "44ba51a33b63a982e5a19778911eabe08969d28a",
+    "stars": 0,
+    "forks": 0,
+    "adoption": "design-reference",
+    "adoptionStatus": "normal-download-ui-design-only",
+    "adoptedModules": [
+      "normal browser UI image-download workflow concept"
+    ],
+    "modificationNotes": "Only the normal browser UI download concept is a design reference. The verified 2026-10-22 implementation uses Chrome preview Download; the independently written src/native-downloads.ts full pre-click filename-baseline workflow was used only for the reference-edited image. The initial file was located by unique observed image name and click time without a pre-click filesystem baseline. The specific share-image -> This image -> Download sequence at scripts/chatgpt_dom.py lines 150-162 was not adopted. No upstream source was copied. Private backend/session/fetch routes and the Codex-imagegen fallback remain excluded.",
+    "sourceFiles": [
+      "scripts/chatgpt_dom.py",
+      "skills/chatgpt-web-images/SKILL.md"
+    ],
+    "checkedAt": "2026-10-22",
+    "license": {
+      "spdx_id": "MIT",
+      "source_url": "https://github.com/TianLin0509/chatgpt-web-images/blob/44ba51a33b63a982e5a19778911eabe08969d28a/LICENSE"
+    },
+    "attributionNote": "Only the normal-download UI concept was borrowed; the specific share-image -> This image -> Download sequence was not adopted. The verified path uses Chrome preview Download, with the independent pre-click baseline helper used only for the edited image."
+  },
+  {
+    "repo": "XiaoDuoYa/codex-with-chatgpt",
+    "sha": "535a07dbb7aee887924c53767d985c09d405319d",
+    "stars": 7492,
+    "forks": 695,
+    "adoption": "researched-only",
+    "adoptionStatus": "future-design-only",
+    "adoptedModules": [],
+    "candidateModules": [
+      "read-only test_status",
+      "read-only execution_output"
+    ],
+    "modificationNotes": "Potential future status/output contracts only. No new service, execution bridge, or upstream MCP implementation has been integrated.",
+    "sourceFiles": [
+      "src/mcp/server.ts",
+      "src/execution/output.ts"
+    ],
+    "checkedAt": "2026-10-22",
+    "license": {
+      "spdx_id": "MIT",
+      "source_url": "https://github.com/XiaoDuoYa/codex-with-chatgpt/blob/535a07dbb7aee887924c53767d985c09d405319d/LICENSE"
+    }
+  },
+  {
+    "repo": "leeheewon-01/chatgpt-bridge",
+    "sha": "ca69f099b0a4fc9c808cd80460def1b45f4d5cfb",
+    "stars": 0,
+    "forks": 0,
+    "adoption": "design-reference",
+    "adoptionStatus": "independently-adapted",
+    "adoptedModules": [
+      "independent Markdown numbering of natively extracted HTTPS sources",
+      "Sources list formatting"
+    ],
+    "modificationNotes": "Only report-formatting design is referenced. src/jobs.ts independently formats HTTPS sources extracted through native browser observations into Markdown links and a Sources list; it does not copy the upstream citation-token converter. CDP and widgetState readers remain excluded. The successful 2026-10-22 research evidence comes from the native current-turn iframe, not upstream mocked tests.",
+    "sourceFiles": [
+      "src/deepresearch.js"
+    ],
+    "checkedAt": "2026-10-22",
+    "license": {
+      "spdx_id": "MIT",
+      "source_url": "https://github.com/leeheewon-01/chatgpt-bridge/blob/ca69f099b0a4fc9c808cd80460def1b45f4d5cfb/LICENSE"
+    },
+    "attributionNote": "Markdown links and the Sources list are independent formatting of natively extracted HTTPS sources. No upstream citation-token converter, CDP, or widgetState reader was copied; mocked tests are not live verification."
+  },
+  {
+    "repo": "Wangnov/chatgpt-skill",
+    "sha": "0dab47ec4bd7966e1a714bac45ad3c4e935f0f4c",
+    "stars": 7,
+    "forks": 0,
+    "license": null,
+    "licenseNotes": "No LICENSE, COPYING, or NOTICE file was found in the complete pinned tree; GitHub reports no repository license. Do not label this project MIT or copy its code.",
+    "adoption": "researched-only",
+    "adoptionStatus": "excluded-no-license",
+    "adoptedModules": [],
+    "modificationNotes": "Research listing only; no source or skill text copied, ported, or distributed.",
+    "sourceFiles": [
+      "README.md"
+    ],
+    "checkedAt": "2026-10-22"
   }
 ]

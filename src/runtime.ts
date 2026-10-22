@@ -1,5 +1,5 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync, renameSync, readdirSync, unlinkSync } from 'node:fs';
-import { join, resolve, dirname } from 'node:path';
+import { join, resolve, dirname, delimiter } from 'node:path';
 import { homedir } from 'node:os';
 import { execFileSync, spawn } from 'node:child_process';
 import { z } from 'zod';
@@ -7,10 +7,17 @@ import { randomUUID } from 'node:crypto';
 import { Store } from './store.js';
 import { assert } from './errors.js';
 import { hash, hasSecret } from './context.js';
-export const PIN='f137c2f84da5df214c1e228d74f5ff43e7641c48';
+export const PIN='6f43747eb5585ca623c0617e729826dfd680c5b7';
 const REPO='https://github.com/miuuyy/codex-chatgpt-web.git';
 function paths(home:string) { const root=join(home,'runtime');return {root,source:join(root,'source'),profile:join(root,'profile'),codex:join(root,'codex-home'),launcher:join(root,'launcher-data'),journal:join(root,'transaction.json')}; }
-export function runtimeEnvironment(home:string):NodeJS.ProcessEnv { const p=paths(home);return {...process.env,CODEX_CHATGPT_WEB_HOME:p.profile,CODEX_HOME:p.codex,CODEX_WEB_GPT_LAUNCHER_DATA_DIR:p.launcher}; }
+export function runtimeEnvironment(home:string,bun='bun'):NodeJS.ProcessEnv {
+  const p=paths(home);const executable=resolveExecutable(bun);
+  const env:NodeJS.ProcessEnv={...process.env,CODEX_CHATGPT_WEB_HOME:p.profile,CODEX_HOME:p.codex,CODEX_WEB_GPT_LAUNCHER_DATA_DIR:p.launcher,
+    CODEX_WEB_GPT_BUN:executable,CODEX_CHATGPT_WEB_BUN:executable,
+    PATH:(executable.includes('/') ? dirname(executable)+delimiter : '')+(process.env.PATH??'')};
+  for(const key of ['CODEX_WEB_GPT_DEV_HOME','VITE_DEV_SERVER_URL','CODEX_CHATGPT_WEB_LAUNCHER','CODEX_CHATGPT_WEB_TRUSTED_CODEX_HOMES','CODEX_CHATGPT_WEB_BROWSER_HOST_DESCRIPTOR','CODEX_WEB_GPT_LAUNCHER_CONTROL_TOKEN','ELECTRON_RUN_AS_NODE'])delete env[key];
+  return env;
+}
 function git(source:string,args:string[]) { return execFileSync('git',['-C',source,...args],{encoding:'utf8',stdio:['ignore','pipe','pipe']}).trim(); }
 function verified(home:string) { const p=paths(home);assert(existsSync(join(p.source,'.git')),'RUNTIME_MISSING','Run runtime prepare first.');assert(git(p.source,['rev-parse','HEAD'])===PIN,'RUNTIME_PIN','Runtime checkout differs from the approved SHA.');assert(!git(p.source,['diff','--name-only','HEAD']),'RUNTIME_DIRTY','Tracked upstream source was modified. Review and restore it before running.');return p; }
 function journal(home:string,data:Record<string,unknown>) {const p=paths(home);mkdirSync(p.root,{recursive:true,mode:0o700});const old=existsSync(p.journal)?JSON.parse(readFileSync(p.journal,'utf8')):{};const temp=p.journal+'.tmp';writeFileSync(temp,JSON.stringify({...old,...data,updated:new Date().toISOString()},null,2),{mode:0o600});renameSync(temp,p.journal);}
@@ -31,12 +38,12 @@ export function runtimeStatus(home:string) {
   return {pin:PIN,installed:actual===PIN,actual,profile:p.profile,codexHome:p.codex,transaction:record,liveVerified:false,health:'run runtime doctor after launcher login and tunnel setup'};
 }
 async function performRuntimeCommand(operation:string,input:unknown) {
-  const store=new Store();const p=paths(store.home);const env=runtimeEnvironment(store.home);
+  const store=new Store();const p=paths(store.home);
   if(operation==='status')return runtimeStatus(store.home);
   if(operation==='prepare') {
     const x=z.object({bun:z.string().default('bun'),installDependencies:z.boolean().default(true)}).parse(input);
-    env.PATH=dirname(resolveExecutable(x.bun))+':'+env.PATH;
-    const version=execFileSync(x.bun,['--version'],{encoding:'utf8'}).trim();assert(version==='1.4.0','BUN_VERSION',`Pinned runtime requires Bun 1.4.0; found ${version}. Install it separately or pass its executable path.`);
+    const env=runtimeEnvironment(store.home,x.bun);
+    const version=execFileSync(x.bun,['--version'],{encoding:'utf8',env}).trim();assert(version==='1.4.0','BUN_VERSION',`Pinned runtime requires Bun 1.4.0; found ${version}. Install it separately or pass its executable path.`);
     mkdirSync(p.root,{recursive:true,mode:0o700});
     if(!existsSync(p.source)) {const staging=p.source+'.staging';assert(!existsSync(staging),'STAGING_EXISTS','An interrupted download exists. Inspect source.staging before removing it.');await run('git',['clone','--no-checkout',REPO,staging],p.root,env);await run('git',['checkout','--detach',PIN],staging,env);renameSync(staging,p.source);}
     verified(store.home);
@@ -47,11 +54,14 @@ async function performRuntimeCommand(operation:string,input:unknown) {
   }
   const source=verified(store.home);const record=existsSync(p.journal)?JSON.parse(readFileSync(p.journal,'utf8')):{};
   const bun=z.object({bun:z.string().default(record.bun??'bun')}).passthrough().parse(input).bun;
-  env.PATH=dirname(resolveExecutable(bun))+':'+env.PATH;
+  const env=runtimeEnvironment(store.home,bun);
   const cli=['run',join(source.source,'src/cli.ts')];
   if(operation==='launcher') {
     mkdirSync(p.codex,{recursive:true,mode:0o700});mkdirSync(p.profile,{recursive:true,mode:0o700});
-    await run(bun,['run','app'],p.source,env);return {status:'launcher_closed'};
+    await run(bun,['run','scripts/build-browser-helper.ts'],p.source,env);
+    await run(bun,['run','build'],join(p.source,'launcher'),env);
+    await run(bun,['run','start'],join(p.source,'launcher'),env);
+    return {status:'launcher_closed'};
   }
   if(operation==='configure') {
     const x=z.object({tunnelId:z.string().min(1),runtimeKeyFile:z.string().min(1),browserHostDescriptor:z.string().min(1),port:z.number().int().min(1024).max(65535).default(43187),codexConfig:z.string().optional(),retainedSession:z.boolean().default(true),biggerContext:z.boolean().default(false),acknowledgeUnofficial:z.literal(true)}).parse(input);
@@ -98,7 +108,7 @@ async function performRuntimeCommand(operation:string,input:unknown) {
   }
   throw new Error(`Unknown runtime operation ${operation}`);
 }
-function resolveExecutable(exe:string) { if(exe.includes('/'))return resolve(exe);const dirs=(process.env.PATH??'').split(':');return dirs.map(x=>join(x,exe)).find(existsSync)??exe; }
+function resolveExecutable(exe:string) { if(exe.includes('/'))return resolve(exe);const dirs=(process.env.PATH??'').split(delimiter);return dirs.map(x=>join(x,exe)).find(existsSync)??exe; }
 
 export async function runtimeCommand(operation:string,input:unknown) {
   if(['status','doctor','launcher'].includes(operation))return performRuntimeCommand(operation,input);

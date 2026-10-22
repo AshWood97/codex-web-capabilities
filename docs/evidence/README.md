@@ -1,19 +1,33 @@
 # 验证证据
 
-`2026-10-16/` 为原开发机器的测试日志脱敏副本。本机用户名/绝对工作区和临时路径替换为占位符；保留测试结果、错误和固定版本。它们是交接前基线记录，不意味着未来修改自动继承通过状态。
+当前结果以 [验收记录](../acceptance.md) 为准。证据按日期和验证层级区分，旧日志不自动继承为新候选通过。
 
-| 文件 | 能证明什么 | 不能证明什么 |
+## 2026-10-22
+
+[2026-10-22-live.md](2026-10-22-live.md) 是本轮受控 Chrome 观察与本地结果的脱敏简报，记录 GPT-6 普通 chat 三轮 CR/修复/复审/协作、合成仓库 3 项测试、新 CLI 进程 resume、真正研究报告恢复、图像与参考编辑下载、CR 网页重载限制，以及 production launcher 的实际边界。它不包含私人会话 URL、扩展身份、任务数据库或原始账户状态。
+
+本轮最终 `npm run check` 的 31 项自动测试通过，六技能 `quick_validate` 也全部通过，记录范围为本项目；不替代真实超过 1 小时、多图 batch、研究澄清/计划、完整 agent 写工具断连、线上回滚或桌面加载。production launcher 已构建启动，独立登录与配置尚未完成，不能据此声明完整 agent 成功。
+
+候选 archive 另已通过独立新 CODEX_HOME 的本地 marketplace/plugin 安装启用、无 node_modules 缓存内 19 工具冷启动、collaborate 默认 chat、两个 helper bundle 导入及卸载/移除来源。日常 Codex 配置未修改，桌面当前会话加载仍未验收。
+
+## 2026-10-16 历史基线
+
+`2026-10-16/` 为当时测试日志的脱敏副本。用户名、绝对工作区和临时路径已替换为占位符。以下结论只属于当时的代码和旧上游 pin：
+
+| 文件 | 当时能证明什么 | 不能证明什么 |
 |---|---|---|
-| `handoff-check.log` | 加入交接文档后重新执行检查，21 项测试、类型检查及打包格式校验通过 | 新增真实账户验收 |
-| `work-check.log` | 本项目类型检查、21 项自动测试、许可证生成及插件格式检查通过 | Pro / Deep Research / 图像完整网页端到端可用 |
-| `upstream-tests.log` | 上游固定 SHA 的 7 文件、143 测试、1276 断言通过 | 当前账号 tunnel 或真实网页工具循环已成功 |
-| `upstream-build.log` | 上游运行时 bundle 构建成功 | 完整编码实机验收 |
-| `archive-verification.log` | 初始源码包在新目录安装依赖及构建检查通过 | 后续交接文档修改版本的所有新产物均已测试 |
-| `installation-results.json` | 独立 CODEX_HOME 的本地 marketplace 安装和启用成功 | 桌面端当前会话已经加载技能 |
-| `uninstallation-results.json` | 卸载/移除来源保留预设配置及安装后新增字段 | 完整在线 runtime setup 的回滚实测 |
-| `cold-start-result.json` | 无 node_modules 的插件 bundle 启动，19 工具可见 | 网页登录或 Pro 可用 |
-| `runtime-wrapper-results.json` | 固定 SHA 准备和上下文配置互斥检查；预期冲突返回 code=1 | runtime configure / doctor / exec 的成功实测 |
+| `handoff-check.log` | 交接文档加入后，21 项测试、类型和打包格式检查通过 | 10 月 22 日候选或新增网页验收 |
+| `work-check.log` | 当时本项目 21 项测试、类型、许可证生成与格式检查通过 | 当前完整网页链路可用 |
+| `upstream-tests.log` | 旧 pin `f137c2f84da5df214c1e228d74f5ff43e7641c48` 的 7 文件、143 测试、1276 断言通过 | 新 pin `6f43747…` 的测试或真实工具循环 |
+| `upstream-build.log` | 旧 pin 运行时 bundle 构建成功 | 当前 production launcher 或编码实机结果 |
+| `archive-verification.log` | 当时源码包在新目录安装依赖、构建检查通过 | 后续发行物均已验证 |
+| `installation-results.json` | 独立 CODEX_HOME 的 CLI marketplace 安装和启用 | 当前桌面会话已加载技能 |
+| `uninstallation-results.json` | 当时卸载保留预设配置及新增用户字段 | 完整在线 setup/rollback 实测 |
+| `cold-start-result.json` | 当时无 node_modules bundle 启动，19 工具可见 | 网页登录、模型或桌面加载 |
+| `runtime-wrapper-results.json` | 当时固定版本准备和上下文互斥拒绝检查 | 当前 configure/doctor/exec 成功 |
 
-原机器的网页截图、私人会话 URL 和完整任务数据库未提交到 Git。真实网页结果与限制见 `../acceptance.md`；接力时收集自己的脱敏证据。图像截图只用于证明生成，不是原图产物。
+原始私人截图、完整网页会话和任务数据库未纳入公开证据。截图可用于检查页面，不能作为图像原文件交付。
 
-新增日志应记录候选 commit、命令、运行时版本和测试范围；新网页证据明确实际模式、任务轮次以及完成/失败状态。不要提交凭证、nonce、tunnel key、浏览器 profile 或私人会话正文。
+## 后续记录
+
+新日志注明日期、候选版本/commit、运行时版本、命令与范围；网页观察另外注明真实模式、当前轮次归属、完成或失败状态及限制。自动测试、上游测试和真实工具循环分别记录。不要提交凭证、nonce、tunnel key、浏览器 profile、扩展身份、主机绝对路径或私人会话 URL。

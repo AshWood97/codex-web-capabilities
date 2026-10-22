@@ -1,9 +1,20 @@
 import {readFileSync,writeFileSync,readdirSync,existsSync,mkdirSync} from 'node:fs';
 import {join} from 'node:path';
 const lock=JSON.parse(readFileSync('package-lock.json','utf8'));
-const lines=['# Third-party notices','','Codex Web Capabilities is MIT licensed.','The optional upstream runtime is installed separately, preserving its own LICENSE and dependency notices. No upstream project source files were copied into this plugin. Design references and exact inspected revisions are in docs/reference-projects.md.','','## Referenced projects',''];
-for(const row of JSON.parse(readFileSync('runtime/reference-lock.json','utf8')))lines.push(`- ${row.repo} @ ${row.sha} — ${row.license.spdx_id}. https://github.com/${row.repo}/tree/${row.sha}`);
-lines.push('','openai/tunnel-client is an indirect optional runtime dependency pinned by upstream to release v0.0.16 (Apache-2.0). No tunnel binary is bundled.','Oracle cookie-based download code and all projects without a verified license are excluded.','','## JavaScript production dependency licenses','','The self-contained dist bundles include portions of these locked production dependencies. This inventory is conservative and also includes production packages whose code may be tree-shaken.');
+const references=JSON.parse(readFileSync('runtime/reference-lock.json','utf8'));
+const lines=['# Third-party notices','','Codex Web Capabilities is MIT licensed.','The optional upstream runtime is installed separately, preserving its own LICENSE and dependency notices. No upstream project source files were copied into this plugin. References below distinguish runtime dependencies, independent design adaptations, and research candidates; listing a project does not mean its code was adopted. Exact revisions, module choices, and modification notes are in docs/reference-projects.md.','','## Referenced projects','',`Research checked: ${references[0].checkedAt}. Code ports: none.`];
+for(const [heading,types]of [
+ ['Optional runtime dependencies',['runtime-dependency','indirect-runtime-dependency']],
+ ['Design references',['design-reference']],
+ ['Research only — not ported',['researched-only']],
+]){
+ lines.push('',`### ${heading}`,'');
+ for(const row of references.filter(row=>types.includes(row.adoption))){
+  const license=row.license?`[${row.license.spdx_id}](${row.license.source_url})`:'No license file found; code excluded';
+  lines.push(`- [${row.repo} @ ${row.sha}](https://github.com/${row.repo}/tree/${row.sha}) — ${license}. Status: ${row.adoptionStatus}.${row.attributionNote?' '+row.attributionNote:''}`);
+ }
+}
+lines.push('','openai/tunnel-client is an indirect optional runtime dependency pinned by upstream to release v0.0.16 (Apache-2.0). No tunnel binary is bundled.','Private backend/session/cookie download routes and unlicensed project code are excluded. Live verification is limited to the dated observations recorded above and in docs/reference-projects.md and docs/acceptance.md.','','## JavaScript production dependency licenses','','The self-contained dist bundles include portions of these locked production dependencies. This inventory is conservative and also includes production packages whose code may be tree-shaken.');
 const missing=[];
 for(const [path,entry]of Object.entries(lock.packages).sort()){
  if(!path||entry.dev||!existsSync(join(path,'package.json')))continue;
